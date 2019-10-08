@@ -1,3 +1,3 @@
 # PRIMA
 
-Repository for WPM "PRIMA"
+Repository for WPM "PRIMA".
