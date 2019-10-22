@@ -8,34 +8,32 @@ var L02_FirstFudge;
         fudge.RenderManager.initialize();
         fudge.Debug.log(canvas);
         let mainNode = new fudge.Node("Main");
-        let batLeft = new fudge.Node("Quad1");
-        let batRight = new fudge.Node("Quad2");
+        let player1 = new fudge.Node("Quad1");
+        let player2 = new fudge.Node("Quad2");
         let ball = new fudge.Node("Ball");
-        let batLeftMesh = new fudge.MeshQuad();
-        let batLeftCmpMesh = new fudge.ComponentMesh(batLeftMesh);
-        let batRightMesh = new fudge.MeshQuad();
-        let batRightCmpMesh = new fudge.ComponentMesh(batRightMesh);
-        let ballMesh = new fudge.MeshQuad();
-        let ballCmpMesh = new fudge.ComponentMesh(ballMesh);
-        mainNode.appendChild(batLeft);
-        mainNode.appendChild(batRight);
+        let mesh = new fudge.MeshQuad();
+        let player1CmpMesh = new fudge.ComponentMesh(mesh);
+        let player2CmpMesh = new fudge.ComponentMesh(mesh);
+        let ballCmpMesh = new fudge.ComponentMesh(mesh);
+        mainNode.appendChild(player1);
+        mainNode.appendChild(player2);
         mainNode.appendChild(ball);
-        batLeft.addComponent(batLeftCmpMesh);
-        batRight.addComponent(batRightCmpMesh);
+        player1.addComponent(player1CmpMesh);
+        player2.addComponent(player2CmpMesh);
         ball.addComponent(ballCmpMesh);
         let mtrSolidWhite = new fudge.Material("SolidWhite", fudge.ShaderUniColor, new fudge.CoatColored(new fudge.Color(0, 1, 1, 1)));
-        let batLeftMat = new fudge.ComponentMaterial(mtrSolidWhite);
-        let batRightMat = new fudge.ComponentMaterial(mtrSolidWhite);
+        let player1Mat = new fudge.ComponentMaterial(mtrSolidWhite);
+        let player2Mat = new fudge.ComponentMaterial(mtrSolidWhite);
         let ballMat = new fudge.ComponentMaterial(mtrSolidWhite);
-        batLeft.addComponent(batLeftMat);
-        batRight.addComponent(batRightMat);
+        player1.addComponent(player1Mat);
+        player2.addComponent(player2Mat);
         ball.addComponent(ballMat);
-        batLeftCmpMesh.pivot.scaleX(0.1);
-        batLeftCmpMesh.pivot.scaleY(0.5);
-        batLeftCmpMesh.pivot.translateX(-1);
-        batRightCmpMesh.pivot.scaleX(0.1);
-        batRightCmpMesh.pivot.scaleY(0.5);
-        batRightCmpMesh.pivot.translateX(1);
+        player1CmpMesh.pivot.scaleX(0.1);
+        player1CmpMesh.pivot.scaleY(0.5);
+        player1CmpMesh.pivot.translateX(-1);
+        player2CmpMesh.pivot.scaleX(0.1);
+        player2CmpMesh.pivot.scaleY(0.5);
+        player2CmpMesh.pivot.translateX(1);
         ballCmpMesh.pivot.scaleX(0.075);
         ballCmpMesh.pivot.scaleY(0.075);
         let cam = new fudge.ComponentCamera();
@@ -46,19 +44,19 @@ var L02_FirstFudge;
         viewport.draw();
         document.body.onkeydown = function (e) {
             if (e.keyCode == 87) {
-                batLeftCmpMesh.pivot.translateY(0.01);
+                player1CmpMesh.pivot.translateY(0.02);
                 viewport.draw();
             }
             else if (e.keyCode == 83) {
-                batLeftCmpMesh.pivot.translateY(-0.01);
+                player1CmpMesh.pivot.translateY(-0.02);
                 viewport.draw();
             }
             if (e.keyCode == 38) {
-                batRightCmpMesh.pivot.translateY(0.01);
+                player2CmpMesh.pivot.translateY(0.02);
                 viewport.draw();
             }
             else if (e.keyCode == 40) {
-                batRightCmpMesh.pivot.translateY(-0.01);
+                player2CmpMesh.pivot.translateY(-0.02);
                 viewport.draw();
             }
         };

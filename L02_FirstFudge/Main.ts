@@ -13,43 +13,40 @@ namespace L02_FirstFudge {
 
         fudge.Debug.log(canvas);
         let mainNode: fudge.Node = new fudge.Node("Main");
-        let batLeft: fudge.Node = new fudge.Node("Quad1");
-        let batRight: fudge.Node = new fudge.Node("Quad2");
+        let player1: fudge.Node = new fudge.Node("Quad1");
+        let player2: fudge.Node = new fudge.Node("Quad2");
         let ball: fudge.Node = new fudge.Node("Ball");
 
-        let batLeftMesh: fudge.MeshQuad = new fudge.MeshQuad();
-        let batLeftCmpMesh: fudge.ComponentMesh = new fudge.ComponentMesh(batLeftMesh);
+        let mesh: fudge.MeshQuad = new fudge.MeshQuad();
 
-        let batRightMesh: fudge.MeshQuad = new fudge.MeshQuad();
-        let batRightCmpMesh: fudge.ComponentMesh = new fudge.ComponentMesh(batRightMesh);
+        let player1CmpMesh: fudge.ComponentMesh = new fudge.ComponentMesh(mesh);
+        let player2CmpMesh: fudge.ComponentMesh = new fudge.ComponentMesh(mesh);
+        let ballCmpMesh: fudge.ComponentMesh = new fudge.ComponentMesh(mesh);
 
-        let ballMesh: fudge.MeshQuad = new fudge.MeshQuad();
-        let ballCmpMesh: fudge.ComponentMesh = new fudge.ComponentMesh(ballMesh);
-
-        mainNode.appendChild(batLeft);
-        mainNode.appendChild(batRight);
+        mainNode.appendChild(player1);
+        mainNode.appendChild(player2);
         mainNode.appendChild(ball);
 
-        batLeft.addComponent(batLeftCmpMesh);
-        batRight.addComponent(batRightCmpMesh);
+        player1.addComponent(player1CmpMesh);
+        player2.addComponent(player2CmpMesh);
         ball.addComponent(ballCmpMesh);
 
         let mtrSolidWhite: fudge.Material = new fudge.Material("SolidWhite", fudge.ShaderUniColor, new fudge.CoatColored(new fudge.Color(0, 1, 1, 1)));
-        let batLeftMat: fudge.ComponentMaterial = new fudge.ComponentMaterial(mtrSolidWhite);
-        let batRightMat: fudge.ComponentMaterial = new fudge.ComponentMaterial(mtrSolidWhite);
+        let player1Mat: fudge.ComponentMaterial = new fudge.ComponentMaterial(mtrSolidWhite);
+        let player2Mat: fudge.ComponentMaterial = new fudge.ComponentMaterial(mtrSolidWhite);
         let ballMat: fudge.ComponentMaterial = new fudge.ComponentMaterial(mtrSolidWhite);
 
-        batLeft.addComponent(batLeftMat);
-        batRight.addComponent(batRightMat);
+        player1.addComponent(player1Mat);
+        player2.addComponent(player2Mat);
         ball.addComponent(ballMat);
 
-        batLeftCmpMesh.pivot.scaleX(0.1);
-        batLeftCmpMesh.pivot.scaleY(0.5);
-        batLeftCmpMesh.pivot.translateX(-1);
+        player1CmpMesh.pivot.scaleX(0.1);
+        player1CmpMesh.pivot.scaleY(0.5);
+        player1CmpMesh.pivot.translateX(-1);
 
-        batRightCmpMesh.pivot.scaleX(0.1);
-        batRightCmpMesh.pivot.scaleY(0.5);
-        batRightCmpMesh.pivot.translateX(1);
+        player2CmpMesh.pivot.scaleX(0.1);
+        player2CmpMesh.pivot.scaleY(0.5);
+        player2CmpMesh.pivot.translateX(1);
 
         ballCmpMesh.pivot.scaleX(0.075);
         ballCmpMesh.pivot.scaleY(0.075);
@@ -67,23 +64,23 @@ namespace L02_FirstFudge {
 
             if (e.keyCode == 87) {
 
-                batLeftCmpMesh.pivot.translateY(0.01);
+                player1CmpMesh.pivot.translateY(0.02);
                 viewport.draw();
 
             } else if (e.keyCode == 83) {
 
-                batLeftCmpMesh.pivot.translateY(-0.01);
+                player1CmpMesh.pivot.translateY(-0.02);
                 viewport.draw();
             }
 
             if (e.keyCode == 38) {
 
-                batRightCmpMesh.pivot.translateY(0.01);
+                player2CmpMesh.pivot.translateY(0.02);
                 viewport.draw();
                 
             } else if (e.keyCode == 40) {
 
-                batRightCmpMesh.pivot.translateY(-0.01);
+                player2CmpMesh.pivot.translateY(-0.02);
                 viewport.draw();
             }
         };
