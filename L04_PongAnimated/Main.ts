@@ -1,4 +1,9 @@
-namespace L03_PongPaddle {
+namespace L04_PongAnimated {
+
+    interface KeyPressed {
+
+        [code: string]: boolean;
+    }
 
     import fudge = FudgeCore;
 
@@ -9,6 +14,8 @@ namespace L03_PongPaddle {
     let paddleLeft: fudge.Node = new fudge.Node("PaddleLeft");
     let paddleRight: fudge.Node = new fudge.Node("PaddleRight");
     let ball: fudge.Node = new fudge.Node("Ball");
+
+    let keysPressed: KeyPressed = {};
 
     function handleLoad(_event: Event): void {
 
@@ -30,7 +37,41 @@ namespace L03_PongPaddle {
         viewport.initialize("Viewport", pong, cam, canvas);
         fudge.Debug.log(viewport);
 
+        document.addEventListener("keydown", handleKeydown);
+        document.addEventListener("keyup", handleKeyup);
+
         viewport.draw();  
+
+        fudge.Loop.addEventListener(fudge.EVENT.LOOP_FRAME, update);
+        fudge.Loop.start();
+    }
+
+    function update(_event: Event): void {
+
+        if (keysPressed[fudge.KEYBOARD_CODE.ARROW_UP])
+            paddleRight.cmpTransform.local.translateY(0.3);
+        
+        if (keysPressed[fudge.KEYBOARD_CODE.ARROW_DOWN])
+            paddleRight.cmpTransform.local.translateY(-0.3);
+
+        if (keysPressed[fudge.KEYBOARD_CODE.W])
+            paddleLeft.cmpTransform.local.translateY(0.3);
+
+        if (keysPressed[fudge.KEYBOARD_CODE.S])
+            paddleLeft.cmpTransform.local.translateY(-0.3);
+
+        fudge.RenderManager.update();
+        viewport.draw();
+    }
+
+    function handleKeydown(_event: KeyboardEvent): void {
+
+        keysPressed[_event.code] = true;
+    }
+
+    function handleKeyup(_event: KeyboardEvent): void {
+
+        keysPressed[_event.code] = false;
     }
 
     function createPong(): fudge.Node {

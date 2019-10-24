@@ -1,12 +1,13 @@
 "use strict";
-var L03_PongPaddle;
-(function (L03_PongPaddle) {
+var L04_PongAnimated;
+(function (L04_PongAnimated) {
     var fudge = FudgeCore;
     window.addEventListener("load", handleLoad);
     let viewport;
     let paddleLeft = new fudge.Node("PaddleLeft");
     let paddleRight = new fudge.Node("PaddleRight");
     let ball = new fudge.Node("Ball");
+    let keysPressed = {};
     function handleLoad(_event) {
         const canvas = document.querySelector("canvas");
         fudge.RenderManager.initialize();
@@ -20,7 +21,29 @@ var L03_PongPaddle;
         viewport = new fudge.Viewport();
         viewport.initialize("Viewport", pong, cam, canvas);
         fudge.Debug.log(viewport);
+        document.addEventListener("keydown", handleKeydown);
+        document.addEventListener("keyup", handleKeyup);
         viewport.draw();
+        fudge.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
+        fudge.Loop.start();
+    }
+    function update(_event) {
+        if (keysPressed[fudge.KEYBOARD_CODE.ARROW_UP])
+            paddleRight.cmpTransform.local.translateY(0.3);
+        if (keysPressed[fudge.KEYBOARD_CODE.ARROW_DOWN])
+            paddleRight.cmpTransform.local.translateY(-0.3);
+        if (keysPressed[fudge.KEYBOARD_CODE.W])
+            paddleLeft.cmpTransform.local.translateY(0.3);
+        if (keysPressed[fudge.KEYBOARD_CODE.S])
+            paddleLeft.cmpTransform.local.translateY(-0.3);
+        fudge.RenderManager.update();
+        viewport.draw();
+    }
+    function handleKeydown(_event) {
+        keysPressed[_event.code] = true;
+    }
+    function handleKeyup(_event) {
+        keysPressed[_event.code] = false;
     }
     function createPong() {
         let pong = new fudge.Node("Pong");
@@ -40,5 +63,5 @@ var L03_PongPaddle;
         pong.appendChild(ball);
         return pong;
     }
-})(L03_PongPaddle || (L03_PongPaddle = {}));
+})(L04_PongAnimated || (L04_PongAnimated = {}));
 //# sourceMappingURL=Main.js.map
