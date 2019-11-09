@@ -11,6 +11,7 @@ namespace L05_PongReflection {
 
     let viewport: fudge.Viewport;
 
+    let pong: fudge.Node = new fudge.Node("Pong");
     let paddleLeft: fudge.Node = new fudge.Node("PaddleLeft");
     let paddleRight: fudge.Node = new fudge.Node("PaddleRight");
     let ball: fudge.Node = new fudge.Node("Ball");
@@ -42,8 +43,8 @@ namespace L05_PongReflection {
         wallTop.cmpTransform.local.translateY(14);
         wallBottom.cmpTransform.local.translateY(-14);
 
-        (<fudge.ComponentMesh> paddleLeft.getComponent(fudge.ComponentMesh) ).pivot.scaleY(4);
-        (<fudge.ComponentMesh> paddleRight.getComponent(fudge.ComponentMesh) ).pivot.scaleY(4);
+        (<fudge.ComponentMesh> paddleLeft.getComponent(fudge.ComponentMesh) ).pivot.scaleY(5);
+        (<fudge.ComponentMesh> paddleRight.getComponent(fudge.ComponentMesh) ).pivot.scaleY(5);
 
         (<fudge.ComponentMesh> wallLeft.getComponent(fudge.ComponentMesh) ).pivot.scaleY(27);
         (<fudge.ComponentMesh> wallRight.getComponent(fudge.ComponentMesh) ).pivot.scaleY(27);
@@ -64,6 +65,19 @@ namespace L05_PongReflection {
     }
 
     function update(_event: Event): void {
+        
+        let hit: boolean = false;
+        for (let node of pong.getChildren()) {
+            if (node.name == "Ball")
+                continue;
+
+            hit = detectHit(ball.cmpTransform.local.translation, node);
+
+            if (hit) {
+                processHit(node);
+                break;
+            }
+        }
 
         if (keysPressed[fudge.KEYBOARD_CODE.ARROW_UP])
             paddleRight.cmpTransform.local.translateY(0.3);
@@ -77,20 +91,7 @@ namespace L05_PongReflection {
         if (keysPressed[fudge.KEYBOARD_CODE.S])
             paddleLeft.cmpTransform.local.translateY(-0.3);
 
-        moveBall();
-
-        if (detectHit(wallLeft)) {
-            ballSpeed.x = -ballSpeed.x;
-
-        } else if (detectHit(wallRight)) {
-            ballSpeed.x = -ballSpeed.x;
-
-        } else if (detectHit(wallTop)) {
-            ballSpeed.y = -ballSpeed.y;
-
-        } else if (detectHit(wallBottom)) {
-            ballSpeed.y = -ballSpeed.y;
-        }     
+        moveBall();    
 
         fudge.RenderManager.update();
         viewport.draw();
@@ -107,8 +108,6 @@ namespace L05_PongReflection {
     }
 
     function createPong(): fudge.Node {
-
-        let pong: fudge.Node = new fudge.Node("Pong");
 
         paddleLeft.addComponent(new fudge.ComponentTransform());
         paddleRight.addComponent(new fudge.ComponentTransform());
@@ -152,14 +151,35 @@ namespace L05_PongReflection {
         ball.cmpTransform.local.translate(ballSpeed);
     }
 
-    function detectHit(n: fudge.Node): boolean {
+    function processHit(_node: fudge.Node): void {
+
+        console.log("Reflect at ", _node.name);
+        switch (_node.name) {
+            case "WallTop":
+            case "WallBottom":
+                ballSpeed.y *= -1;
+                break;
+            case "WallRight":
+            case "WallLeft":
+                ballSpeed.x *= -1;
+                break;
+            case "PaddleLeft":
+                ballSpeed.x *= -1;
+                break;
+            case "PaddleRight":
+                ballSpeed.x *= -1;
+                break;
+            default:
+                break;
+        }
+    }
+
+    function detectHit(b: fudge.Vector3, n: fudge.Node): boolean {
         
         let t: fudge.ComponentTransform = n.cmpTransform;
         let m: fudge.ComponentMesh = (<fudge.ComponentMesh> n.getComponent(fudge.ComponentMesh));
         let topLeft: fudge.Vector3 = new fudge.Vector3(t.local.translation.x - m.pivot.scaling.x / 2, t.local.translation.y + m.pivot.scaling.y / 2, 0);
         let bottomRight: fudge.Vector3 = new fudge.Vector3(t.local.translation.x + m.pivot.scaling.x / 2, t.local.translation.y - m.pivot.scaling.y / 2, 0);
-
-        let b: fudge.Vector3 = new fudge.Vector3(ball.cmpTransform.local.translation.x, ball.cmpTransform.local.translation.y, 0);
         
         if (b.x > topLeft.x) {
             if (b.x < bottomRight.x)  {

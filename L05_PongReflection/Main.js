@@ -4,6 +4,7 @@ var L05_PongReflection;
     var fudge = FudgeCore;
     window.addEventListener("load", handleLoad);
     let viewport;
+    let pong = new fudge.Node("Pong");
     let paddleLeft = new fudge.Node("PaddleLeft");
     let paddleRight = new fudge.Node("PaddleRight");
     let ball = new fudge.Node("Ball");
@@ -25,8 +26,8 @@ var L05_PongReflection;
         wallRight.cmpTransform.local.translateX(21);
         wallTop.cmpTransform.local.translateY(14);
         wallBottom.cmpTransform.local.translateY(-14);
-        paddleLeft.getComponent(fudge.ComponentMesh).pivot.scaleY(4);
-        paddleRight.getComponent(fudge.ComponentMesh).pivot.scaleY(4);
+        paddleLeft.getComponent(fudge.ComponentMesh).pivot.scaleY(5);
+        paddleRight.getComponent(fudge.ComponentMesh).pivot.scaleY(5);
         wallLeft.getComponent(fudge.ComponentMesh).pivot.scaleY(27);
         wallRight.getComponent(fudge.ComponentMesh).pivot.scaleY(27);
         wallTop.getComponent(fudge.ComponentMesh).pivot.scaleX(41);
@@ -41,6 +42,16 @@ var L05_PongReflection;
         fudge.Loop.start();
     }
     function update(_event) {
+        let hit = false;
+        for (let node of pong.getChildren()) {
+            if (node.name == "Ball")
+                continue;
+            hit = detectHit(ball.cmpTransform.local.translation, node);
+            if (hit) {
+                processHit(node);
+                break;
+            }
+        }
         if (keysPressed[fudge.KEYBOARD_CODE.ARROW_UP])
             paddleRight.cmpTransform.local.translateY(0.3);
         if (keysPressed[fudge.KEYBOARD_CODE.ARROW_DOWN])
@@ -50,18 +61,6 @@ var L05_PongReflection;
         if (keysPressed[fudge.KEYBOARD_CODE.S])
             paddleLeft.cmpTransform.local.translateY(-0.3);
         moveBall();
-        if (detectHit(wallLeft)) {
-            ballSpeed.x = -ballSpeed.x;
-        }
-        else if (detectHit(wallRight)) {
-            ballSpeed.x = -ballSpeed.x;
-        }
-        else if (detectHit(wallTop)) {
-            ballSpeed.y = -ballSpeed.y;
-        }
-        else if (detectHit(wallBottom)) {
-            ballSpeed.y = -ballSpeed.y;
-        }
         fudge.RenderManager.update();
         viewport.draw();
     }
@@ -72,7 +71,6 @@ var L05_PongReflection;
         keysPressed[_event.code] = false;
     }
     function createPong() {
-        let pong = new fudge.Node("Pong");
         paddleLeft.addComponent(new fudge.ComponentTransform());
         paddleRight.addComponent(new fudge.ComponentTransform());
         ball.addComponent(new fudge.ComponentTransform());
@@ -108,12 +106,32 @@ var L05_PongReflection;
     function moveBall() {
         ball.cmpTransform.local.translate(ballSpeed);
     }
-    function detectHit(n) {
+    function processHit(_node) {
+        console.log("Reflect at ", _node.name);
+        switch (_node.name) {
+            case "WallTop":
+            case "WallBottom":
+                ballSpeed.y *= -1;
+                break;
+            case "WallRight":
+            case "WallLeft":
+                ballSpeed.x *= -1;
+                break;
+            case "PaddleLeft":
+                ballSpeed.x *= -1;
+                break;
+            case "PaddleRight":
+                ballSpeed.x *= -1;
+                break;
+            default:
+                break;
+        }
+    }
+    function detectHit(b, n) {
         let t = n.cmpTransform;
         let m = n.getComponent(fudge.ComponentMesh);
         let topLeft = new fudge.Vector3(t.local.translation.x - m.pivot.scaling.x / 2, t.local.translation.y + m.pivot.scaling.y / 2, 0);
         let bottomRight = new fudge.Vector3(t.local.translation.x + m.pivot.scaling.x / 2, t.local.translation.y - m.pivot.scaling.y / 2, 0);
-        let b = new fudge.Vector3(ball.cmpTransform.local.translation.x, ball.cmpTransform.local.translation.y, 0);
         if (b.x > topLeft.x) {
             if (b.x < bottomRight.x) {
                 if (b.y > bottomRight.y) {
