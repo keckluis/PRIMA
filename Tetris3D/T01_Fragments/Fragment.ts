@@ -1,5 +1,5 @@
 namespace L07_FudgeCraft_Fragments {
-    
+
     import fudge = FudgeCore;
 
     export class Fragment extends fudge.Node {
@@ -28,20 +28,28 @@ namespace L07_FudgeCraft_Fragments {
         private static getShapeArray(): number[][][] {
 
             return [
-                // corner
-                [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]],
                 // quad
                 [[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0]],
-                // s
-                [[0, 0, 0], [0, 1, 0], [1, 0, 0], [1, -1, 0]],
+
                 // long
                 [[0, 0, 0], [1, 0, 0], [2, 0, 0], [3, 0, 0]],
+
+                // L
+                [[0, 0, 0], [1, 0, 0], [2, 0, 0], [2, 1, 0]],
+
+                // corner
+                [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]],
+
                 //zig zag 1
                 [[0, 0, 0], [1, 0, 0], [1, 1, 0], [1, 1, 1]],
+
                 //zig zag 2
                 [[0, 0, 0], [1, 0, 0], [1, 1, 0], [1, 1, -1]],
-                // L
-                [[0, 0, 0], [1, 0, 0], [2, 0, 0], [2, 1, 0]]
+
+                // s
+                [[0, 0, 0], [0, 1, 0], [1, 0, 0], [1, -1, 0]]
+            
+                // these are all shapes that can be created with 4 cubes
             ];
         }
 
