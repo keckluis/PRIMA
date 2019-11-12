@@ -11,21 +11,36 @@ var L07_FudgeCraft_Fragments;
         ƒ.RenderManager.initialize(true);
         ƒ.Debug.log("Canvas", canvas);
         let cmpCamera = new ƒ.ComponentCamera();
-        cmpCamera.pivot.translate(new ƒ.Vector3(2, 3, 10));
+        cmpCamera.pivot.translate(new ƒ.Vector3(2, 3, 22));
         cmpCamera.pivot.lookAt(ƒ.Vector3.ZERO());
         game = new ƒ.Node("FudgeCraft");
-        // let cube: Cube = new Cube(CUBE_TYPE.BLUE);
+        // corner
         let fragment = new L07_FudgeCraft_Fragments.Fragment(0);
-        // ƒ.Debug.log("Fragment", fragment);
-        fragment.addComponent(new ƒ.ComponentTransform());
+        fragment.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.TRANSLATION(new ƒ.Vector3(-5, 5, 0))));
         game.appendChild(fragment);
+        // quad
         fragment = new L07_FudgeCraft_Fragments.Fragment(1);
-        // ƒ.Debug.log("Fragment", fragment);
-        fragment.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.TRANSLATION(ƒ.Vector3.X(3))));
+        fragment.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.TRANSLATION(new ƒ.Vector3(0, 5, 0))));
         game.appendChild(fragment);
+        // s
         fragment = new L07_FudgeCraft_Fragments.Fragment(2);
-        // ƒ.Debug.log("Fragment", fragment);
-        fragment.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.TRANSLATION(ƒ.Vector3.X(-3))));
+        fragment.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.TRANSLATION(new ƒ.Vector3(5, 5, 0))));
+        game.appendChild(fragment);
+        // long
+        fragment = new L07_FudgeCraft_Fragments.Fragment(3);
+        fragment.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.TRANSLATION(new ƒ.Vector3(-5, 0, 0))));
+        game.appendChild(fragment);
+        // zig zag 1
+        fragment = new L07_FudgeCraft_Fragments.Fragment(4);
+        fragment.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.TRANSLATION(new ƒ.Vector3(0, 0, 0))));
+        game.appendChild(fragment);
+        // zig zag 2
+        fragment = new L07_FudgeCraft_Fragments.Fragment(5);
+        fragment.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.TRANSLATION(new ƒ.Vector3(5, 0, 0))));
+        game.appendChild(fragment);
+        // L
+        fragment = new L07_FudgeCraft_Fragments.Fragment(6);
+        fragment.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.TRANSLATION(new ƒ.Vector3(0, -5, 0))));
         game.appendChild(fragment);
         let cmpLight = new ƒ.ComponentLight(new ƒ.LightDirectional(ƒ.Color.WHITE));
         cmpLight.pivot.lookAt(new ƒ.Vector3(0.5, 1, 0.8));
