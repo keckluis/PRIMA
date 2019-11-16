@@ -1,4 +1,4 @@
-namespace L07_FudgeCraft_Fragments {
+namespace T01_Fragments {
 
     import fudge = FudgeCore;
 
@@ -15,7 +15,7 @@ namespace L07_FudgeCraft_Fragments {
         fudge.Debug.log("Canvas", canvas);
 
         let cmpCamera: fudge.ComponentCamera = new fudge.ComponentCamera();
-        cmpCamera.pivot.translate(new fudge.Vector3(2, 3, 22));
+        cmpCamera.pivot.translate(new fudge.Vector3(0, 0, 22));
         cmpCamera.pivot.lookAt(fudge.Vector3.ZERO());
 
         game = new fudge.Node("FudgeCraft");

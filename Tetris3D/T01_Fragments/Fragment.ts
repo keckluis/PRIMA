@@ -1,4 +1,4 @@
-namespace L07_FudgeCraft_Fragments {
+namespace T01_Fragments {
 
     import fudge = FudgeCore;
 
@@ -11,7 +11,7 @@ namespace L07_FudgeCraft_Fragments {
 
             super("Fragment-Type" + _shape);
 
-            let shape: number [][] = Fragment.shapes[_shape];
+            let shape: number[][] = Fragment.shapes[_shape];
 
             for (let position of shape) {
 

@@ -1,4 +1,4 @@
-namespace L07_FudgeCraft_Fragments {
+namespace T01_Fragments {
 
     import fudge = FudgeCore;
 
