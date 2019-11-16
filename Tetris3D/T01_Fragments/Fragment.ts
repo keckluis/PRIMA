@@ -23,6 +23,8 @@ namespace T01_Fragments {
 
                 this.appendChild(cube);
             }
+
+            this.addComponent(new fudge.ComponentTransform());
         }
 
         private static getShapeArray(): number[][][] {

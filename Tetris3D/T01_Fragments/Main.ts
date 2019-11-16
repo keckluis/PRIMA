@@ -22,37 +22,37 @@ namespace T01_Fragments {
 
         // corner
         let fragment: Fragment = new Fragment(0);
-        fragment.addComponent(new fudge.ComponentTransform(fudge.Matrix4x4.TRANSLATION(new fudge.Vector3(-5, 5, 0))));
+        fragment.cmpTransform.local.translate(new fudge.Vector3(-5, 5, 0));
         game.appendChild(fragment);
 
         // quad
         fragment = new Fragment(1);
-        fragment.addComponent(new fudge.ComponentTransform(fudge.Matrix4x4.TRANSLATION(new fudge.Vector3(0, 5, 0))));
+        fragment.cmpTransform.local.translate(new fudge.Vector3(0, 5, 0));
         game.appendChild(fragment);
 
         // s
         fragment = new Fragment(2);
-        fragment.addComponent(new fudge.ComponentTransform(fudge.Matrix4x4.TRANSLATION(new fudge.Vector3(5, 5, 0))));
+        fragment.cmpTransform.local.translate(new fudge.Vector3(5, 5, 0));
         game.appendChild(fragment);
 
         // long
         fragment = new Fragment(3);
-        fragment.addComponent(new fudge.ComponentTransform(fudge.Matrix4x4.TRANSLATION(new fudge.Vector3(-5, 0, 0))));
+        fragment.cmpTransform.local.translate(new fudge.Vector3(-5, 0, 0));
         game.appendChild(fragment);
 
         // zig zag 1
         fragment = new Fragment(4);
-        fragment.addComponent(new fudge.ComponentTransform(fudge.Matrix4x4.TRANSLATION(new fudge.Vector3(0, 0, 0))));
+        fragment.cmpTransform.local.translate(new fudge.Vector3(0, 0, 0));
         game.appendChild(fragment);
 
         // zig zag 2
         fragment = new Fragment(5);
-        fragment.addComponent(new fudge.ComponentTransform(fudge.Matrix4x4.TRANSLATION(new fudge.Vector3(5, 0, 0))));
+        fragment.cmpTransform.local.translate(new fudge.Vector3(5, 0, 0));
         game.appendChild(fragment);
 
         // L
         fragment = new Fragment(6);
-        fragment.addComponent(new fudge.ComponentTransform(fudge.Matrix4x4.TRANSLATION(new fudge.Vector3(0, -5, 0))));
+        fragment.cmpTransform.local.translate(new fudge.Vector3(0, -5, 0));
         game.appendChild(fragment);
 
         let cmpLight: fudge.ComponentLight = new fudge.ComponentLight(new fudge.LightDirectional(fudge.Color.WHITE));
@@ -75,16 +75,19 @@ namespace T01_Fragments {
         switch (_event.code) {
 
             case fudge.KEYBOARD_CODE.ARROW_UP:
-                rotate.add(fudge.Vector3.X(-1));
+                rotate.add(fudge.Vector3.X(-90));
                 break;
+
             case fudge.KEYBOARD_CODE.ARROW_DOWN:
-                rotate.add(fudge.Vector3.X(1));
+                rotate.add(fudge.Vector3.X(90));
                 break;
+
             case fudge.KEYBOARD_CODE.ARROW_LEFT:
-                rotate.add(fudge.Vector3.Y(-1));
+                rotate.add(fudge.Vector3.Y(-90));
                 break;
+                
             case fudge.KEYBOARD_CODE.ARROW_RIGHT:
-                rotate.add(fudge.Vector3.Y(1));
+                rotate.add(fudge.Vector3.Y(90));
                 break;
         }
 

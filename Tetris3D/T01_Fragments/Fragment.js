@@ -14,6 +14,7 @@ var T01_Fragments;
                 let cube = new T01_Fragments.Cube(type, vctPosition);
                 this.appendChild(cube);
             }
+            this.addComponent(new fudge.ComponentTransform());
         }
         static getShapeArray() {
             return [
