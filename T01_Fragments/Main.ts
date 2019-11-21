@@ -69,7 +69,7 @@ namespace T01_Fragments {
 
         window.addEventListener("keydown", hndKeyDown);
     }
-
+    
     function hndKeyDown(_event: KeyboardEvent): void {
 
         switch (_event.code) {
