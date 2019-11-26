@@ -1,6 +1,6 @@
 "use strict";
-var L05_PongReflection;
-(function (L05_PongReflection) {
+var P05_PongReflection;
+(function (P05_PongReflection) {
     var fudge = FudgeCore;
     window.addEventListener("load", handleLoad);
     let viewport;
@@ -143,5 +143,5 @@ var L05_PongReflection;
         }
         return false;
     }
-})(L05_PongReflection || (L05_PongReflection = {}));
+})(P05_PongReflection || (P05_PongReflection = {}));
 //# sourceMappingURL=Main.js.map

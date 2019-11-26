@@ -1,6 +1,6 @@
 "use strict";
-var L03_PongPaddle;
-(function (L03_PongPaddle) {
+var P03_PongPaddle;
+(function (P03_PongPaddle) {
     var fudge = FudgeCore;
     window.addEventListener("load", handleLoad);
     let viewport;
@@ -40,5 +40,5 @@ var L03_PongPaddle;
         pong.appendChild(ball);
         return pong;
     }
-})(L03_PongPaddle || (L03_PongPaddle = {}));
+})(P03_PongPaddle || (P03_PongPaddle = {}));
 //# sourceMappingURL=Main.js.map

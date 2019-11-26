@@ -1,6 +1,6 @@
 "use strict";
-var L04_PongAnimated;
-(function (L04_PongAnimated) {
+var P04_PongAnimated;
+(function (P04_PongAnimated) {
     var fudge = FudgeCore;
     window.addEventListener("load", handleLoad);
     let viewport;
@@ -68,5 +68,5 @@ var L04_PongAnimated;
     function moveBall() {
         ball.cmpTransform.local.translate(ballSpeed);
     }
-})(L04_PongAnimated || (L04_PongAnimated = {}));
+})(P04_PongAnimated || (P04_PongAnimated = {}));
 //# sourceMappingURL=Main.js.map

@@ -1,80 +1,74 @@
 "use strict";
 var T02_Grid;
 (function (T02_Grid) {
-    var fudge = FudgeCore;
+    T02_Grid.ƒ = FudgeCore;
     window.addEventListener("load", hndLoad);
+    T02_Grid.game = new T02_Grid.ƒ.Node("FudgeCraft");
+    T02_Grid.grid = new T02_Grid.Grid();
+    let control = new T02_Grid.Control();
     let viewport;
-    let game;
-    let rotate = fudge.Vector3.ZERO();
-    let grid = new T02_Grid.Grid();
     function hndLoad(_event) {
-        grid.set("Jonas", new T02_Grid.Cube(T02_Grid.CUBE_TYPE.GREEN, fudge.Vector3.ZERO()));
-        console.log(grid.get("Jonas"));
         const canvas = document.querySelector("canvas");
-        fudge.RenderManager.initialize(true);
-        fudge.Debug.log("Canvas", canvas);
-        let cmpCamera = new fudge.ComponentCamera();
-        cmpCamera.pivot.translate(new fudge.Vector3(0, 0, 22));
-        cmpCamera.pivot.lookAt(fudge.Vector3.ZERO());
-        game = new fudge.Node("FudgeCraft");
-        // corner
-        let fragment = new T02_Grid.Fragment(0);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(-5, 5, 0));
-        game.appendChild(fragment);
-        // quad
-        fragment = new T02_Grid.Fragment(1);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(0, 5, 0));
-        game.appendChild(fragment);
-        // s
-        fragment = new T02_Grid.Fragment(2);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(5, 5, 0));
-        game.appendChild(fragment);
-        // long
-        fragment = new T02_Grid.Fragment(3);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(-5, 0, 0));
-        game.appendChild(fragment);
-        // zig zag 1
-        fragment = new T02_Grid.Fragment(4);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(0, 0, 0));
-        game.appendChild(fragment);
-        // zig zag 2
-        fragment = new T02_Grid.Fragment(5);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(5, 0, 0));
-        game.appendChild(fragment);
-        // L
-        fragment = new T02_Grid.Fragment(6);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(0, -5, 0));
-        game.appendChild(fragment);
-        let cmpLight = new fudge.ComponentLight(new fudge.LightDirectional(fudge.Color.WHITE));
-        cmpLight.pivot.lookAt(new fudge.Vector3(0.5, 1, 0.8));
-        game.addComponent(cmpLight);
-        viewport = new fudge.Viewport();
-        viewport.initialize("Viewport", game, cmpCamera, canvas);
-        fudge.Debug.log("Viewport", viewport);
+        T02_Grid.ƒ.RenderManager.initialize(true);
+        T02_Grid.ƒ.Debug.log("Canvas", canvas);
+        let cmpCamera = new T02_Grid.ƒ.ComponentCamera();
+        cmpCamera.pivot.translate(new T02_Grid.ƒ.Vector3(4, 6, 20));
+        cmpCamera.pivot.lookAt(T02_Grid.ƒ.Vector3.ZERO());
+        cmpCamera.backgroundColor = T02_Grid.ƒ.Color.WHITE;
+        let cmpLight = new T02_Grid.ƒ.ComponentLight(new T02_Grid.ƒ.LightDirectional(T02_Grid.ƒ.Color.WHITE));
+        cmpLight.pivot.lookAt(new T02_Grid.ƒ.Vector3(0.5, 1, 0.8));
+        T02_Grid.game.addComponent(cmpLight);
+        let cmpLightAmbient = new T02_Grid.ƒ.ComponentLight(new T02_Grid.ƒ.LightAmbient(T02_Grid.ƒ.Color.DARK_GREY));
+        T02_Grid.game.addComponent(cmpLightAmbient);
+        viewport = new T02_Grid.ƒ.Viewport();
+        viewport.initialize("Viewport", T02_Grid.game, cmpCamera, canvas);
+        T02_Grid.ƒ.Debug.log("Viewport", viewport);
         viewport.draw();
-        fudge.Debug.log("Game", game);
+        startRandomFragment();
+        T02_Grid.game.appendChild(control);
+        viewport.draw();
+        T02_Grid.ƒ.Debug.log("Game", T02_Grid.game);
         window.addEventListener("keydown", hndKeyDown);
+        //test();
     }
     function hndKeyDown(_event) {
-        switch (_event.code) {
-            case fudge.KEYBOARD_CODE.ARROW_UP:
-                rotate.add(fudge.Vector3.X(-90));
-                break;
-            case fudge.KEYBOARD_CODE.ARROW_DOWN:
-                rotate.add(fudge.Vector3.X(90));
-                break;
-            case fudge.KEYBOARD_CODE.ARROW_LEFT:
-                rotate.add(fudge.Vector3.Y(-90));
-                break;
-            case fudge.KEYBOARD_CODE.ARROW_RIGHT:
-                rotate.add(fudge.Vector3.Y(90));
-                break;
+        if (_event.code == T02_Grid.ƒ.KEYBOARD_CODE.SPACE) {
+            control.freeze();
+            startRandomFragment();
         }
-        for (let fragment of game.getChildren()) {
-            fragment.cmpTransform.local.rotation = rotate;
-        }
-        fudge.RenderManager.update();
+        let transformation = T02_Grid.Control.transformations[_event.code];
+        if (transformation)
+            move(transformation);
+        // ƒ.RenderManager.update();
         viewport.draw();
     }
+    function move(_transformation) {
+        let animationSteps = 10;
+        let fullRotation = 90;
+        let fullTranslation = 1;
+        let move = {
+            rotation: _transformation.rotation ? T02_Grid.ƒ.Vector3.SCALE(_transformation.rotation, fullRotation) : new T02_Grid.ƒ.Vector3(),
+            translation: _transformation.translation ? T02_Grid.ƒ.Vector3.SCALE(_transformation.translation, fullTranslation) : new T02_Grid.ƒ.Vector3()
+        };
+        let timers = T02_Grid.ƒ.Time.game.getTimers();
+        if (Object.keys(timers).length > 0)
+            return;
+        let collisions = control.checkCollisions(move);
+        if (collisions.length > 0)
+            return;
+        move.translation.scale(1 / animationSteps);
+        move.rotation.scale(1 / animationSteps);
+        T02_Grid.ƒ.Time.game.setTimer(10, animationSteps, function () {
+            control.move(move);
+            // ƒ.RenderManager.update();
+            viewport.draw();
+        });
+    }
+    function startRandomFragment() {
+        let fragment = T02_Grid.Fragment.getRandom();
+        control.cmpTransform.local = T02_Grid.ƒ.Matrix4x4.IDENTITY;
+        control.setFragment(fragment);
+    }
+    T02_Grid.startRandomFragment = startRandomFragment;
 })(T02_Grid || (T02_Grid = {}));
 //# sourceMappingURL=Main.js.map

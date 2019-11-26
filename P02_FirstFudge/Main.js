@@ -1,6 +1,6 @@
 "use strict";
-var L02_FirstFudge;
-(function (L02_FirstFudge) {
+var P02_FirstFudge;
+(function (P02_FirstFudge) {
     var fudge = FudgeCore;
     window.addEventListener("load", handleLoad);
     function handleLoad(_event) {
@@ -61,5 +61,5 @@ var L02_FirstFudge;
             }
         };
     }
-})(L02_FirstFudge || (L02_FirstFudge = {}));
+})(P02_FirstFudge || (P02_FirstFudge = {}));
 //# sourceMappingURL=Main.js.map

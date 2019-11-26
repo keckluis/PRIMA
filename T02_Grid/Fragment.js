@@ -16,6 +16,11 @@ var T02_Grid;
             }
             this.addComponent(new fudge.ComponentTransform());
         }
+        static getRandom() {
+            let shape = Math.floor(Math.random() * Fragment.shapes.length);
+            let fragment = new Fragment(shape);
+            return fragment;
+        }
         static getShapeArray() {
             return [
                 // quad

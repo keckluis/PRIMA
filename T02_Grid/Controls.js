@@ -1,32 +1,14 @@
-namespace T02_Grid {
-
-    import fudge = FudgeCore;
-
-    export interface Transformation {
-        translation?: fudge.Vector3;
-        rotation?: fudge.Vector3;
-    }
- 
-    export interface Transformations {
-        [keycode: string]: Transformation;
-    }
-
-    export interface Collision {
-        element: GridElement;
-        cube: Cube;
-    }
-
-    export class Control extends fudge.Node {
-        public static transformations: Transformations = Control.defineControls();
-        private fragment: Fragment;
-
+"use strict";
+var T02_Grid;
+(function (T02_Grid) {
+    var fudge = FudgeCore;
+    class Control extends fudge.Node {
         constructor() {
             super("Control");
             this.addComponent(new fudge.ComponentTransform());
         }
-
-        public static defineControls(): Transformations {
-            let controls: Transformations = {};
+        static defineControls() {
+            let controls = {};
             controls[fudge.KEYBOARD_CODE.ARROW_UP] = { rotation: fudge.Vector3.X(-1) };
             controls[fudge.KEYBOARD_CODE.ARROW_DOWN] = { rotation: fudge.Vector3.X(1) };
             controls[fudge.KEYBOARD_CODE.ARROW_LEFT] = { rotation: fudge.Vector3.Y(-1) };
@@ -39,49 +21,44 @@ namespace T02_Grid {
             controls[fudge.KEYBOARD_CODE.CTRL_LEFT] = controls[fudge.KEYBOARD_CODE.CTRL_RIGHT] = { translation: fudge.Vector3.Y(-1) };
             return controls;
         }
-
-        public setFragment(_fragment: Fragment): void {
+        setFragment(_fragment) {
             for (let child of this.getChildren())
                 this.removeChild(child);
             this.appendChild(_fragment);
             this.fragment = _fragment;
         }
-
-        public move(_transformation: Transformation): void {
-            let mtxContainer: fudge.Matrix4x4 = this.cmpTransform.local;
-            let mtxFragment: fudge.Matrix4x4 = this.fragment.cmpTransform.local;
+        move(_transformation) {
+            let mtxContainer = this.cmpTransform.local;
+            let mtxFragment = this.fragment.cmpTransform.local;
             mtxFragment.rotate(_transformation.rotation, true);
             mtxContainer.translate(_transformation.translation);
         }
-
-        public checkCollisions(_transformation: Transformation): Collision[] {
-            let mtxContainer: fudge.Matrix4x4 = this.cmpTransform.local;
-            let mtxFragment: fudge.Matrix4x4 = this.fragment.cmpTransform.local;
-            let save: fudge.Mutator[] = [mtxContainer.getMutator(), mtxFragment.getMutator()];
+        checkCollisions(_transformation) {
+            let mtxContainer = this.cmpTransform.local;
+            let mtxFragment = this.fragment.cmpTransform.local;
+            let save = [mtxContainer.getMutator(), mtxFragment.getMutator()];
             mtxFragment.rotate(_transformation.rotation, true);
             mtxContainer.translate(_transformation.translation);
-
             fudge.RenderManager.update();
-
-            let collisions: Collision[] = [];
+            let collisions = [];
             for (let cube of this.fragment.getChildren()) {
-                let element: GridElement = grid.pull(cube.mtxWorld.translation);
+                let element = T02_Grid.grid.pull(cube.mtxWorld.translation);
                 if (element)
                     collisions.push({ element, cube });
             }
-
             mtxContainer.mutate(save[0]);
             mtxFragment.mutate(save[1]);
-
             return collisions;
         }
-
-        public freeze(): void {
+        freeze() {
             for (let cube of this.fragment.getChildren()) {
-                let position: fudge.Vector3 = cube.mtxWorld.translation;
+                let position = cube.mtxWorld.translation;
                 cube.cmpTransform.local.translation = position;
-                grid.push(position, new GridElement(cube));
+                T02_Grid.grid.push(position, new T02_Grid.GridElement(cube));
             }
         }
     }
-}
+    Control.transformations = Control.defineControls();
+    T02_Grid.Control = Control;
+})(T02_Grid || (T02_Grid = {}));
+//# sourceMappingURL=Controls.js.map
