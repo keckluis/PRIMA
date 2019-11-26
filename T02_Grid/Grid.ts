@@ -2,38 +2,47 @@ namespace T02_Grid {
 
     import fudge = FudgeCore;
 
-    export class Grid {
-        
-        public grid: boolean[][][];
+    export class GridElement {
+        public cube: Cube;
 
-        constructor(_size: number) {
+        constructor(_cube: Cube = null) {
+            this.cube = _cube;
+        }
+    }
 
-            this.grid = new boolean[_size][_size][_size];
+    export class Grid extends Map<string, GridElement> {
+        // private grid: Map<string, Cube> = new Map();
+        constructor() {
+            super();
+            this.push(fudge.Vector3.ZERO(), new GridElement(new Cube(CUBE_TYPE.GREY, fudge.Vector3.ZERO())));
         }
 
-        public setGrid(_pos: fudge.Vector3): boolean {
-
-            if (!this.grid[_pos.x + this.grid.length / 2][_pos.y + this.grid.length / 2][_pos.z + this.grid.length / 2]) {
-
-                this.grid[_pos.x + this.grid.length / 2][_pos.y + this.grid.length / 2][_pos.z + this.grid.length / 2] = true;
-                return true;
-
-            } else {
-
-                return false;
-            }
+        push(_position: fudge.Vector3, _element: GridElement = null): void {
+            let key: string = this.toKey(_position);
+            this.set(key, _element);
+            if (_element)
+                game.appendChild(_element.cube);
         }
 
-        public getGrid(_pos: fudge.Vector3): boolean {
+        pull(_position: fudge.Vector3): GridElement {
+            let key: string = this.toKey(_position);
+            let element: GridElement = this.get(key);
+            return element;
+        }
 
-            if (this.grid[_pos.x + this.grid.length / 2][_pos.y + this.grid.length / 2][_pos.z + this.grid.length / 2]) {
+        pop(_position: fudge.Vector3): GridElement {
+            let key: string = this.toKey(_position);
+            let element: GridElement = this.get(key);
+            this.delete(key);
+            if (element)
+                game.removeChild(element.cube);
+            return element;
+        }
 
-                return true;
-
-            } else {
-
-                return false;
-            }
-       }
+        toKey(_position: fudge.Vector3): string {
+            let position: fudge.Vector3 = _position.map(Math.round);
+            let key: string = position.toString();
+            return key;
+        }
     }
 }

@@ -13,7 +13,7 @@ var T02_Grid;
     })(CUBE_TYPE = T02_Grid.CUBE_TYPE || (T02_Grid.CUBE_TYPE = {}));
     class Cube extends fudge.Node {
         constructor(_type, _position) {
-            super("Cube");
+            super("Cube." + _type);
             let cmpMesh = new fudge.ComponentMesh(Cube.mesh);
             this.addComponent(cmpMesh);
             let cmpMaterial = new fudge.ComponentMaterial(Cube.materials.get(_type));

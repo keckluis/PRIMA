@@ -1,4 +1,4 @@
-namespace L02_FirstFudge {
+namespace P02_FirstFudge {
 
     import fudge = FudgeCore;
 

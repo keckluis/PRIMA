@@ -1,102 +1,89 @@
 namespace T02_Grid {
-
-    import fudge = FudgeCore;
+    export import ƒ = FudgeCore;
 
     window.addEventListener("load", hndLoad);
 
-    let viewport: fudge.Viewport;
-    let game: fudge.Node;
-    let rotate: fudge.Vector3 = fudge.Vector3.ZERO();
+    export let game: ƒ.Node = new ƒ.Node("FudgeCraft");
+    export let grid: Grid = new Grid();
+    let control: Control = new Control();
+    let viewport: ƒ.Viewport;
 
     function hndLoad(_event: Event): void {
-
         const canvas: HTMLCanvasElement = document.querySelector("canvas");
-        fudge.RenderManager.initialize(true);
-        fudge.Debug.log("Canvas", canvas);
+        ƒ.RenderManager.initialize(true);
+        ƒ.Debug.log("Canvas", canvas);
 
-        let cmpCamera: fudge.ComponentCamera = new fudge.ComponentCamera();
-        cmpCamera.pivot.translate(new fudge.Vector3(0, 0, 22));
-        cmpCamera.pivot.lookAt(fudge.Vector3.ZERO());
+        let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
+        cmpCamera.pivot.translate(new ƒ.Vector3(4, 6, 20));
+        cmpCamera.pivot.lookAt(ƒ.Vector3.ZERO());
+        cmpCamera.backgroundColor = ƒ.Color.WHITE;
 
-        game = new fudge.Node("FudgeCraft");
-
-        // corner
-        let fragment: Fragment = new Fragment(0);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(-5, 5, 0));
-        game.appendChild(fragment);
-
-        // quad
-        fragment = new Fragment(1);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(0, 5, 0));
-        game.appendChild(fragment);
-
-        // s
-        fragment = new Fragment(2);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(5, 5, 0));
-        game.appendChild(fragment);
-
-        // long
-        fragment = new Fragment(3);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(-5, 0, 0));
-        game.appendChild(fragment);
-
-        // zig zag 1
-        fragment = new Fragment(4);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(0, 0, 0));
-        game.appendChild(fragment);
-
-        // zig zag 2
-        fragment = new Fragment(5);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(5, 0, 0));
-        game.appendChild(fragment);
-
-        // L
-        fragment = new Fragment(6);
-        fragment.cmpTransform.local.translate(new fudge.Vector3(0, -5, 0));
-        game.appendChild(fragment);
-
-        let cmpLight: fudge.ComponentLight = new fudge.ComponentLight(new fudge.LightDirectional(fudge.Color.WHITE));
-        cmpLight.pivot.lookAt(new fudge.Vector3(0.5, 1, 0.8));
+        let cmpLight: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightDirectional(ƒ.Color.WHITE));
+        cmpLight.pivot.lookAt(new ƒ.Vector3(0.5, 1, 0.8));
         game.addComponent(cmpLight);
-
-        viewport = new fudge.Viewport();
+        let cmpLightAmbient: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightAmbient(ƒ.Color.DARK_GREY));
+        game.addComponent(cmpLightAmbient);
+        
+        viewport = new ƒ.Viewport();
         viewport.initialize("Viewport", game, cmpCamera, canvas);
-        fudge.Debug.log("Viewport", viewport);
-
+        ƒ.Debug.log("Viewport", viewport);
         viewport.draw();
-
-        fudge.Debug.log("Game", game);
-
+        
+        startRandomFragment();
+        game.appendChild(control);
+        
+        viewport.draw();
+        ƒ.Debug.log("Game", game);
+        
         window.addEventListener("keydown", hndKeyDown);
+        
+        //test();
     }
-    
+
     function hndKeyDown(_event: KeyboardEvent): void {
-
-        switch (_event.code) {
-
-            case fudge.KEYBOARD_CODE.ARROW_UP:
-                rotate.add(fudge.Vector3.X(-90));
-                break;
-
-            case fudge.KEYBOARD_CODE.ARROW_DOWN:
-                rotate.add(fudge.Vector3.X(90));
-                break;
-
-            case fudge.KEYBOARD_CODE.ARROW_LEFT:
-                rotate.add(fudge.Vector3.Y(-90));
-                break;
-                
-            case fudge.KEYBOARD_CODE.ARROW_RIGHT:
-                rotate.add(fudge.Vector3.Y(90));
-                break;
+        if (_event.code == ƒ.KEYBOARD_CODE.SPACE) {
+            control.freeze();
+            startRandomFragment();
         }
 
-        for (let fragment of game.getChildren()) {
+        let transformation: Transformation = Control.transformations[_event.code];
+        if (transformation)
+            move(transformation);
 
-            fragment.cmpTransform.local.rotation = rotate;
-        }
-
-        fudge.RenderManager.update();
+        // ƒ.RenderManager.update();
         viewport.draw();
+    }
+
+    function move(_transformation: Transformation): void {
+        let animationSteps: number = 10;
+        let fullRotation: number = 90;
+        let fullTranslation: number = 1;
+        let move: Transformation = {
+            rotation: _transformation.rotation ? ƒ.Vector3.SCALE(_transformation.rotation, fullRotation) : new ƒ.Vector3(),
+            translation: _transformation.translation ? ƒ.Vector3.SCALE(_transformation.translation, fullTranslation) : new ƒ.Vector3()
+        };
+
+        let timers: ƒ.Timers = ƒ.Time.game.getTimers();
+        if (Object.keys(timers).length > 0)
+            return;
+
+        let collisions: GridElement[] = control.checkCollisions(move);
+        if (collisions.length > 0)
+            return;
+
+        move.translation.scale(1 / animationSteps);
+        move.rotation.scale(1 / animationSteps);
+
+        ƒ.Time.game.setTimer(10, animationSteps, function (): void {
+            control.move(move);
+            // ƒ.RenderManager.update();
+            viewport.draw();
+        });
+    }
+
+    export function startRandomFragment(): void {
+        let fragment: Fragment = Fragment.getRandom();
+        control.cmpTransform.local = ƒ.Matrix4x4.IDENTITY;
+        control.setFragment(fragment);
     }
 }

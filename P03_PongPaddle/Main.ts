@@ -1,4 +1,4 @@
-namespace L03_PongPaddle {
+namespace P03_PongPaddle {
 
     import fudge = FudgeCore;
 

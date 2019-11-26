@@ -1,4 +1,4 @@
-namespace L01_HelloWorld { 
+namespace P01_HelloWorld { 
     
     console.log("Hello World");
     window.addEventListener("load", handleLoad);

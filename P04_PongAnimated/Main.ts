@@ -1,4 +1,4 @@
-namespace L04_PongAnimated {
+namespace P04_PongAnimated {
 
     interface KeyPressed {
 

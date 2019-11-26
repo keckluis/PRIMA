@@ -6,7 +6,10 @@ var T02_Grid;
     let viewport;
     let game;
     let rotate = fudge.Vector3.ZERO();
+    let grid = new T02_Grid.Grid();
     function hndLoad(_event) {
+        grid.set("Jonas", new T02_Grid.Cube(T02_Grid.CUBE_TYPE.GREEN, fudge.Vector3.ZERO()));
+        console.log(grid.get("Jonas"));
         const canvas = document.querySelector("canvas");
         fudge.RenderManager.initialize(true);
         fudge.Debug.log("Canvas", canvas);

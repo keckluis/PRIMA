@@ -27,6 +27,12 @@ namespace T02_Grid {
             this.addComponent(new fudge.ComponentTransform());
         }
 
+        public static getRandom(): Fragment {
+            let shape: number = Math.floor(Math.random() * Fragment.shapes.length);
+            let fragment: Fragment = new Fragment(shape);
+            return fragment;
+        }
+
         private static getShapeArray(): number[][][] {
 
             return [

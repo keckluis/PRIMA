@@ -1,4 +1,4 @@
-namespace L05_PongReflection {
+namespace P05_PongReflection {
 
     interface KeyPressed {
 

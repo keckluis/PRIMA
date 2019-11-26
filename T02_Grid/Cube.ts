@@ -21,7 +21,7 @@ namespace T02_Grid {
 
         constructor(_type: CUBE_TYPE, _position: fudge.Vector3) {
 
-            super("Cube");
+            super("Cube." + _type);
 
             let cmpMesh: fudge.ComponentMesh = new fudge.ComponentMesh(Cube.mesh);
             this.addComponent(cmpMesh);
