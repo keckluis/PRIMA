@@ -6,7 +6,7 @@ var T02_Grid;
     }
     T02_Grid.test = test;
     function testGrid() {
-        let cube = new T02_Grid.Cube(T02_Grid.CUBE_TYPE.GREEN, T02_Grid.ƒ.Vector3.ZERO());
+        let cube = new T02_Grid.Cube(T02_Grid.CUBE_TYPE.GREEN, T02_Grid.fudge.Vector3.ZERO());
         T02_Grid.grid.push(cube.cmpTransform.local.translation, new T02_Grid.GridElement(cube));
         let pulled = T02_Grid.grid.pull(cube.cmpTransform.local.translation);
         logResult(cube == pulled.cube, "Grid push and pull", cube, pulled.cube, pulled);

@@ -3,6 +3,7 @@ namespace T02_Grid {
     import fudge = FudgeCore;
 
     export class GridElement {
+
         public cube: Cube;
 
         constructor(_cube: Cube = null) {
@@ -11,6 +12,7 @@ namespace T02_Grid {
     }
 
     export class Grid extends Map<string, GridElement> {
+        
         // private grid: Map<string, Cube> = new Map();
         constructor() {
             super();

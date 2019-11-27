@@ -1,39 +1,39 @@
 namespace T02_Grid {
-    export import ƒ = FudgeCore;
+    export import fudge = FudgeCore;
 
     window.addEventListener("load", hndLoad);
 
-    export let game: ƒ.Node = new ƒ.Node("FudgeCraft");
+    export let game: fudge.Node = new fudge.Node("FudgeCraft");
     export let grid: Grid = new Grid();
     let control: Control = new Control();
-    let viewport: ƒ.Viewport;
+    let viewport: fudge.Viewport;
 
     function hndLoad(_event: Event): void {
         const canvas: HTMLCanvasElement = document.querySelector("canvas");
-        ƒ.RenderManager.initialize(true);
-        ƒ.Debug.log("Canvas", canvas);
+        fudge.RenderManager.initialize(true);
+        fudge.Debug.log("Canvas", canvas);
 
-        let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
-        cmpCamera.pivot.translate(new ƒ.Vector3(4, 6, 20));
-        cmpCamera.pivot.lookAt(ƒ.Vector3.ZERO());
-        cmpCamera.backgroundColor = ƒ.Color.WHITE;
+        let cmpCamera: fudge.ComponentCamera = new fudge.ComponentCamera();
+        cmpCamera.pivot.translate(new fudge.Vector3(4, 6, 20));
+        cmpCamera.pivot.lookAt(fudge.Vector3.ZERO());
+        cmpCamera.backgroundColor = fudge.Color.WHITE;
 
-        let cmpLight: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightDirectional(ƒ.Color.WHITE));
-        cmpLight.pivot.lookAt(new ƒ.Vector3(0.5, 1, 0.8));
+        let cmpLight: fudge.ComponentLight = new fudge.ComponentLight(new fudge.LightDirectional(fudge.Color.WHITE));
+        cmpLight.pivot.lookAt(new fudge.Vector3(0.5, 1, 0.8));
         game.addComponent(cmpLight);
-        let cmpLightAmbient: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightAmbient(ƒ.Color.DARK_GREY));
+        let cmpLightAmbient: fudge.ComponentLight = new fudge.ComponentLight(new fudge.LightAmbient(fudge.Color.DARK_GREY));
         game.addComponent(cmpLightAmbient);
         
-        viewport = new ƒ.Viewport();
+        viewport = new fudge.Viewport();
         viewport.initialize("Viewport", game, cmpCamera, canvas);
-        ƒ.Debug.log("Viewport", viewport);
+        fudge.Debug.log("Viewport", viewport);
         viewport.draw();
         
         startRandomFragment();
         game.appendChild(control);
         
         viewport.draw();
-        ƒ.Debug.log("Game", game);
+        fudge.Debug.log("Game", game);
         
         window.addEventListener("keydown", hndKeyDown);
         
@@ -41,7 +41,7 @@ namespace T02_Grid {
     }
 
     function hndKeyDown(_event: KeyboardEvent): void {
-        if (_event.code == ƒ.KEYBOARD_CODE.SPACE) {
+        if (_event.code == fudge.KEYBOARD_CODE.SPACE) {
             control.freeze();
             startRandomFragment();
         }
@@ -50,7 +50,7 @@ namespace T02_Grid {
         if (transformation)
             move(transformation);
 
-        // ƒ.RenderManager.update();
+        // fudge.RenderManager.update();
         viewport.draw();
     }
 
@@ -59,11 +59,11 @@ namespace T02_Grid {
         let fullRotation: number = 90;
         let fullTranslation: number = 1;
         let move: Transformation = {
-            rotation: _transformation.rotation ? ƒ.Vector3.SCALE(_transformation.rotation, fullRotation) : new ƒ.Vector3(),
-            translation: _transformation.translation ? ƒ.Vector3.SCALE(_transformation.translation, fullTranslation) : new ƒ.Vector3()
+            rotation: _transformation.rotation ? fudge.Vector3.SCALE(_transformation.rotation, fullRotation) : new fudge.Vector3(),
+            translation: _transformation.translation ? fudge.Vector3.SCALE(_transformation.translation, fullTranslation) : new fudge.Vector3()
         };
 
-        let timers: ƒ.Timers = ƒ.Time.game.getTimers();
+        let timers: fudge.Timers = fudge.Time.game.getTimers();
         if (Object.keys(timers).length > 0)
             return;
 
@@ -74,16 +74,16 @@ namespace T02_Grid {
         move.translation.scale(1 / animationSteps);
         move.rotation.scale(1 / animationSteps);
 
-        ƒ.Time.game.setTimer(10, animationSteps, function (): void {
+        fudge.Time.game.setTimer(10, animationSteps, function (): void {
             control.move(move);
-            // ƒ.RenderManager.update();
+            // fudge.RenderManager.update();
             viewport.draw();
         });
     }
 
     export function startRandomFragment(): void {
         let fragment: Fragment = Fragment.getRandom();
-        control.cmpTransform.local = ƒ.Matrix4x4.IDENTITY;
+        control.cmpTransform.local = fudge.Matrix4x4.IDENTITY;
         control.setFragment(fragment);
     }
 }

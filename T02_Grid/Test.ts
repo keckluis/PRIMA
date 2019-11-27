@@ -5,7 +5,7 @@ namespace T02_Grid {
     }
 
     function testGrid(): void {
-        let cube: Cube = new Cube(CUBE_TYPE.GREEN, ƒ.Vector3.ZERO());
+        let cube: Cube = new Cube(CUBE_TYPE.GREEN, fudge.Vector3.ZERO());
         grid.push(cube.cmpTransform.local.translation, new GridElement(cube));
 
         let pulled: GridElement = grid.pull(cube.cmpTransform.local.translation);

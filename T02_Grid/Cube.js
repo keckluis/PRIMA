@@ -1,7 +1,7 @@
 "use strict";
 var T02_Grid;
 (function (T02_Grid) {
-    var ƒ = FudgeCore;
+    var fudge = FudgeCore;
     let CUBE_TYPE;
     (function (CUBE_TYPE) {
         CUBE_TYPE["GREEN"] = "Green";
@@ -12,30 +12,30 @@ var T02_Grid;
         CUBE_TYPE["CYAN"] = "Cyan";
         CUBE_TYPE["GREY"] = "Grey";
     })(CUBE_TYPE = T02_Grid.CUBE_TYPE || (T02_Grid.CUBE_TYPE = {}));
-    class Cube extends ƒ.Node {
+    class Cube extends fudge.Node {
         constructor(_type, _position) {
             super("Cube." + _type);
-            let cmpMesh = new ƒ.ComponentMesh(Cube.mesh);
-            cmpMesh.pivot.scale(ƒ.Vector3.ONE(0.9));
+            let cmpMesh = new fudge.ComponentMesh(Cube.mesh);
+            cmpMesh.pivot.scale(fudge.Vector3.ONE(0.9));
             this.addComponent(cmpMesh);
-            let cmpMaterial = new ƒ.ComponentMaterial(Cube.materials.get(_type));
+            let cmpMaterial = new fudge.ComponentMaterial(Cube.materials.get(_type));
             this.addComponent(cmpMaterial);
-            let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.TRANSLATION(_position));
+            let cmpTransform = new fudge.ComponentTransform(fudge.Matrix4x4.TRANSLATION(_position));
             this.addComponent(cmpTransform);
         }
         static createMaterials() {
             return new Map([
-                [CUBE_TYPE.RED, new ƒ.Material(CUBE_TYPE.RED, ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.RED))],
-                [CUBE_TYPE.GREEN, new ƒ.Material(CUBE_TYPE.GREEN, ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.GREEN))],
-                [CUBE_TYPE.BLUE, new ƒ.Material(CUBE_TYPE.BLUE, ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.BLUE))],
-                [CUBE_TYPE.MAGENTA, new ƒ.Material(CUBE_TYPE.MAGENTA, ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.MAGENTA))],
-                [CUBE_TYPE.YELLOW, new ƒ.Material(CUBE_TYPE.YELLOW, ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.YELLOW))],
-                [CUBE_TYPE.CYAN, new ƒ.Material(CUBE_TYPE.CYAN, ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CYAN))],
-                [CUBE_TYPE.GREY, new ƒ.Material(CUBE_TYPE.GREY, ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.LIGHT_GREY))]
+                [CUBE_TYPE.RED, new fudge.Material(CUBE_TYPE.RED, fudge.ShaderFlat, new fudge.CoatColored(fudge.Color.RED))],
+                [CUBE_TYPE.GREEN, new fudge.Material(CUBE_TYPE.GREEN, fudge.ShaderFlat, new fudge.CoatColored(fudge.Color.GREEN))],
+                [CUBE_TYPE.BLUE, new fudge.Material(CUBE_TYPE.BLUE, fudge.ShaderFlat, new fudge.CoatColored(fudge.Color.BLUE))],
+                [CUBE_TYPE.MAGENTA, new fudge.Material(CUBE_TYPE.MAGENTA, fudge.ShaderFlat, new fudge.CoatColored(fudge.Color.MAGENTA))],
+                [CUBE_TYPE.YELLOW, new fudge.Material(CUBE_TYPE.YELLOW, fudge.ShaderFlat, new fudge.CoatColored(fudge.Color.YELLOW))],
+                [CUBE_TYPE.CYAN, new fudge.Material(CUBE_TYPE.CYAN, fudge.ShaderFlat, new fudge.CoatColored(fudge.Color.CYAN))],
+                [CUBE_TYPE.GREY, new fudge.Material(CUBE_TYPE.GREY, fudge.ShaderFlat, new fudge.CoatColored(fudge.Color.LIGHT_GREY))]
             ]);
         }
     }
-    Cube.mesh = new ƒ.MeshCube();
+    Cube.mesh = new fudge.MeshCube();
     Cube.materials = Cube.createMaterials();
     T02_Grid.Cube = Cube;
 })(T02_Grid || (T02_Grid = {}));
