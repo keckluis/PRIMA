@@ -1,4 +1,4 @@
-namespace T02_Grid {
+namespace T03_Camera {
     export import fudge = FudgeCore;
 
     window.addEventListener("load", hndLoad);
@@ -6,6 +6,7 @@ namespace T02_Grid {
     export let game: fudge.Node = new fudge.Node("FudgeCraft");
     export let grid: Grid = new Grid();
     let control: Control = new Control();
+    let camera: CameraOrbit = new CameraOrbit(75);
     let viewport: fudge.Viewport;
 
     function hndLoad(_event: Event): void {
@@ -14,10 +15,9 @@ namespace T02_Grid {
         fudge.RenderManager.initialize(true);
         fudge.Debug.log("Canvas", canvas);
         
-        let cmpCamera: fudge.ComponentCamera = new fudge.ComponentCamera();
-        cmpCamera.pivot.translate(new fudge.Vector3(0, 0, 22));
-        cmpCamera.pivot.lookAt(fudge.Vector3.ZERO());
-        cmpCamera.backgroundColor = fudge.Color.WHITE;
+        game.appendChild(camera);
+        camera.setRotationX(-20);
+        camera.setRotationY(20);
 
         let cmpLight: fudge.ComponentLight = new fudge.ComponentLight(new fudge.LightDirectional(fudge.Color.WHITE));
         cmpLight.pivot.lookAt(new fudge.Vector3(0.5, 1, 0.8));
@@ -26,7 +26,7 @@ namespace T02_Grid {
         game.addComponent(cmpLightAmbient);
         
         viewport = new fudge.Viewport();
-        viewport.initialize("Viewport", game, cmpCamera, canvas);
+        viewport.initialize("Viewport", game, camera.cmpCamera, canvas);
         fudge.Debug.log("Viewport", viewport);
         viewport.draw();
         
@@ -37,11 +37,12 @@ namespace T02_Grid {
         fudge.Debug.log("Game", game);
         
         window.addEventListener("keydown", hndKeyDown);
-        
-        //test();
+        window.addEventListener("mousemove", hndMouseMove);
+        window.addEventListener("wheel", hndWheel);
     }
 
     function hndKeyDown(_event: KeyboardEvent): void {
+
         if (_event.code == fudge.KEYBOARD_CODE.SPACE) {
             control.freeze();
             startRandomFragment();
@@ -51,11 +52,30 @@ namespace T02_Grid {
         if (transformation)
             move(transformation);
 
-        // fudge.RenderManager.update();
+        viewport.draw();
+    }
+
+    function hndMouseMove(_event: MouseEvent): void {
+
+        if (_event.movementX)  
+            camera.rotateY(-(_event.movementX * 0.5));
+
+        if (_event.movementY)
+            camera.rotateX(-(_event.movementY * 0.5));
+
+        viewport.draw();
+    }
+
+    function hndWheel(_event: WheelEvent): void {
+
+        if (_event.deltaY)
+            camera.moveDistance(-(_event.deltaY * 0.1));
+        
         viewport.draw();
     }
 
     function move(_transformation: Transformation): void {
+
         let animationSteps: number = 10;
         let fullRotation: number = 90;
         let fullTranslation: number = 1;
@@ -77,12 +97,13 @@ namespace T02_Grid {
 
         fudge.Time.game.setTimer(10, animationSteps, function (): void {
             control.move(move);
-            // fudge.RenderManager.update();
+
             viewport.draw();
         });
     }
 
     export function startRandomFragment(): void {
+
         let fragment: Fragment = Fragment.getRandom();
         control.cmpTransform.local = fudge.Matrix4x4.IDENTITY;
         control.setFragment(fragment);

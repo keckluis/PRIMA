@@ -12,7 +12,7 @@ var T02_Grid;
         T02_Grid.fudge.RenderManager.initialize(true);
         T02_Grid.fudge.Debug.log("Canvas", canvas);
         let cmpCamera = new T02_Grid.fudge.ComponentCamera();
-        cmpCamera.pivot.translate(new T02_Grid.fudge.Vector3(4, 6, 20));
+        cmpCamera.pivot.translate(new T02_Grid.fudge.Vector3(0, 0, 22));
         cmpCamera.pivot.lookAt(T02_Grid.fudge.Vector3.ZERO());
         cmpCamera.backgroundColor = T02_Grid.fudge.Color.WHITE;
         let cmpLight = new T02_Grid.fudge.ComponentLight(new T02_Grid.fudge.LightDirectional(T02_Grid.fudge.Color.WHITE));
