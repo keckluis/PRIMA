@@ -90,6 +90,106 @@ declare namespace FudgeCore {
     }
 }
 declare namespace FudgeCore {
+    interface MapEventTypeToListener {
+        [eventType: string]: EventListener[];
+    }
+    /**
+     * Types of events specific to Fudge, in addition to the standard DOM/Browser-Types and custom strings
+     */
+    const enum EVENT {
+        /** dispatched to targets registered at [[Loop]], when requested animation frame starts */
+        LOOP_FRAME = "loopFrame",
+        /** dispatched to a [[Component]] when its being added to a [[Node]] */
+        COMPONENT_ADD = "componentAdd",
+        /** dispatched to a [[Component]] when its being removed from a [[Node]] */
+        COMPONENT_REMOVE = "componentRemove",
+        /** dispatched to a [[Component]] when its being activated */
+        COMPONENT_ACTIVATE = "componentActivate",
+        /** dispatched to a [[Component]] when its being deactivated */
+        COMPONENT_DEACTIVATE = "componentDeactivate",
+        /** dispatched to a child [[Node]] and its ancestors after it was appended to a parent */
+        CHILD_APPEND = "childAdd",
+        /** dispatched to a child [[Node]] and its ancestors just before its being removed from its parent */
+        CHILD_REMOVE = "childRemove",
+        /** dispatched to a [[Mutable]] when its being mutated */
+        MUTATE = "mutate",
+        /** dispatched to [[Viewport]] when it gets the focus to receive keyboard input */
+        FOCUS_IN = "focusin",
+        /** dispatched to [[Viewport]] when it loses the focus to receive keyboard input */
+        FOCUS_OUT = "focusout",
+        /** dispatched to [[Node]] when it's done serializing */
+        NODE_SERIALIZED = "nodeSerialized",
+        /** dispatched to [[Node]] when it's done deserializing, so all components, children and attributes are available */
+        NODE_DESERIALIZED = "nodeDeserialized",
+        /** dispatched to [[NodeResourceInstance]] when it's content is set according to a serialization of a [[NodeResource]]  */
+        NODERESOURCE_INSTANTIATED = "nodeResourceInstantiated",
+        /** dispatched to [[Time]] when it's scaling changed  */
+        TIME_SCALED = "timeScaled",
+        /** dispatched to [[FileIo]] when a list of files has been loaded  */
+        FILE_LOADED = "fileLoaded",
+        /** dispatched to [[FileIo]] when a list of files has been saved */
+        FILE_SAVED = "fileSaved"
+    }
+    const enum EVENT_POINTER {
+        UP = "\u0192pointerup",
+        DOWN = "\u0192pointerdown",
+        MOVE = "\u0192pointermove",
+        OVER = "\u0192pointerover",
+        ENTER = "\u0192pointerenter",
+        CANCEL = "\u0192pointercancel",
+        OUT = "\u0192pointerout",
+        LEAVE = "\u0192pointerleave",
+        GOTCAPTURE = "\u0192gotpointercapture",
+        LOSTCAPTURE = "\u0192lostpointercapture"
+    }
+    const enum EVENT_DRAGDROP {
+        DRAG = "\u0192drag",
+        DROP = "\u0192drop",
+        START = "\u0192dragstart",
+        END = "\u0192dragend",
+        OVER = "\u0192dragover"
+    }
+    const enum EVENT_WHEEL {
+        WHEEL = "\u0192wheel"
+    }
+    class PointerEventƒ extends PointerEvent {
+        pointerX: number;
+        pointerY: number;
+        canvasX: number;
+        canvasY: number;
+        clientRect: ClientRect;
+        constructor(type: string, _event: PointerEventƒ);
+    }
+    class DragDropEventƒ extends DragEvent {
+        pointerX: number;
+        pointerY: number;
+        canvasX: number;
+        canvasY: number;
+        clientRect: ClientRect;
+        constructor(type: string, _event: DragDropEventƒ);
+    }
+    class WheelEventƒ extends WheelEvent {
+        constructor(type: string, _event: WheelEventƒ);
+    }
+    type Eventƒ = PointerEventƒ | DragDropEventƒ | WheelEventƒ | KeyboardEventƒ | Event;
+    type EventListenerƒ = ((_event: PointerEventƒ) => void) | ((_event: DragDropEventƒ) => void) | ((_event: WheelEventƒ) => void) | ((_event: KeyboardEventƒ) => void) | ((_event: Eventƒ) => void) | EventListenerObject;
+    class EventTargetƒ extends EventTarget {
+        addEventListener(_type: string, _handler: EventListenerƒ, _options?: boolean | AddEventListenerOptions): void;
+        removeEventListener(_type: string, _handler: EventListenerƒ, _options?: boolean | AddEventListenerOptions): void;
+        dispatchEvent(_event: Eventƒ): boolean;
+    }
+    /**
+     * Base class for EventTarget singletons, which are fixed entities in the structure of Fudge, such as the core loop
+     */
+    class EventTargetStatic extends EventTargetƒ {
+        protected static targetStatic: EventTargetStatic;
+        protected constructor();
+        static addEventListener(_type: string, _handler: EventListener): void;
+        static removeEventListener(_type: string, _handler: EventListener): void;
+        static dispatchEvent(_event: Event): boolean;
+    }
+}
+declare namespace FudgeCore {
     /**
      * Interface describing the datatypes of the attributes a mutator as strings
      */
@@ -115,7 +215,7 @@ declare namespace FudgeCore {
      * The provided properties of the [[Mutator]] must match public properties or getters/setters of the object.
      * Otherwise, they will be ignored if not handled by an override of the mutate-method in the subclass and throw errors in an automatically generated user-interface for the object.
      */
-    abstract class Mutable extends EventTarget {
+    abstract class Mutable extends EventTargetƒ {
         /**
          * Retrieves the type of this mutable subclass as the name of the runtime class
          * @returns The type of the mutable
@@ -1655,7 +1755,7 @@ declare namespace FudgeCore {
      * [[RenderManager]].viewport -> [[Viewport]].source -> [[Viewport]].destination -> DOM-Canvas -> Client(CSS)
      * @authors Jascha Karagöl, HFU, 2019 | Jirka Dell'Oro-Friedl, HFU, 2019
      */
-    class Viewport extends EventTarget {
+    class Viewport extends EventTargetƒ {
         private static focus;
         name: string;
         camera: ComponentCamera;
@@ -1787,91 +1887,6 @@ declare namespace FudgeCore {
          * @param _fudgeNode The node to create a scenegraphentry for.
          */
         private createSceneGraph;
-    }
-}
-declare namespace FudgeCore {
-    interface MapEventTypeToListener {
-        [eventType: string]: EventListener[];
-    }
-    /**
-     * Types of events specific to Fudge, in addition to the standard DOM/Browser-Types and custom strings
-     */
-    const enum EVENT {
-        /** dispatched to targets registered at [[Loop]], when requested animation frame starts */
-        LOOP_FRAME = "loopFrame",
-        /** dispatched to a [[Component]] when its being added to a [[Node]] */
-        COMPONENT_ADD = "componentAdd",
-        /** dispatched to a [[Component]] when its being removed from a [[Node]] */
-        COMPONENT_REMOVE = "componentRemove",
-        /** dispatched to a [[Component]] when its being activated */
-        COMPONENT_ACTIVATE = "componentActivate",
-        /** dispatched to a [[Component]] when its being deactivated */
-        COMPONENT_DEACTIVATE = "componentDeactivate",
-        /** dispatched to a child [[Node]] and its ancestors after it was appended to a parent */
-        CHILD_APPEND = "childAdd",
-        /** dispatched to a child [[Node]] and its ancestors just before its being removed from its parent */
-        CHILD_REMOVE = "childRemove",
-        /** dispatched to a [[Mutable]] when its being mutated */
-        MUTATE = "mutate",
-        /** dispatched to [[Viewport]] when it gets the focus to receive keyboard input */
-        FOCUS_IN = "focusin",
-        /** dispatched to [[Viewport]] when it loses the focus to receive keyboard input */
-        FOCUS_OUT = "focusout",
-        /** dispatched to [[Node]] when it's done serializing */
-        NODE_SERIALIZED = "nodeSerialized",
-        /** dispatched to [[Node]] when it's done deserializing, so all components, children and attributes are available */
-        NODE_DESERIALIZED = "nodeDeserialized",
-        /** dispatched to [[NodeResourceInstance]] when it's content is set according to a serialization of a [[NodeResource]]  */
-        NODERESOURCE_INSTANTIATED = "nodeResourceInstantiated",
-        /** dispatched to [[Time]] when it's scaling changed  */
-        TIME_SCALED = "timeScaled",
-        /** dispatched to [[FileIo]] when a list of files has been loaded  */
-        FILE_LOADED = "fileLoaded",
-        /** dispatched to [[FileIo]] when a list of files has been saved */
-        FILE_SAVED = "fileSaved"
-    }
-    const enum EVENT_POINTER {
-        UP = "\u0192pointerup",
-        DOWN = "\u0192pointerdown"
-    }
-    const enum EVENT_DRAGDROP {
-        DRAG = "\u0192drag",
-        DROP = "\u0192drop",
-        START = "\u0192dragstart",
-        END = "\u0192dragend",
-        OVER = "\u0192dragover"
-    }
-    const enum EVENT_WHEEL {
-        WHEEL = "\u0192wheel"
-    }
-    class PointerEventƒ extends PointerEvent {
-        pointerX: number;
-        pointerY: number;
-        canvasX: number;
-        canvasY: number;
-        clientRect: ClientRect;
-        constructor(type: string, _event: PointerEventƒ);
-    }
-    class DragDropEventƒ extends DragEvent {
-        pointerX: number;
-        pointerY: number;
-        canvasX: number;
-        canvasY: number;
-        clientRect: ClientRect;
-        constructor(type: string, _event: DragDropEventƒ);
-    }
-    class WheelEventƒ extends WheelEvent {
-        constructor(type: string, _event: WheelEventƒ);
-    }
-    /**
-     * Base class for EventTarget singletons, which are fixed entities in the structure of Fudge, such as the core loop
-     */
-    class EventTargetStatic extends EventTarget {
-        protected static targetStatic: EventTargetStatic;
-        protected constructor();
-        static addEventListener(_type: string, _handler: EventListener): void;
-        static removeEventListener(_type: string, _handler: EventListener): void;
-        static dispatchEvent(_event: Event): boolean;
     }
 }
 declare namespace FudgeCore {
@@ -2372,13 +2387,21 @@ declare namespace FudgeCore {
      *            +y
      *             |__ +x
      * ```
-     * @authors Lukas Scheuerle, HFU, 2019
+     * @authors Lukas Scheuerle, Jirka Dell'Oro-Friedl, HFU, 2019
      */
     class Vector2 extends Mutable {
         private data;
         constructor(_x?: number, _y?: number);
         x: number;
         y: number;
+        /**
+         * Returns the length of the vector
+         */
+        readonly magnitude: number;
+        /**
+         * Returns the square of the magnitude of the vector without calculating a square root. Faster for simple proximity evaluation.
+         */
+        readonly magnitudeSquared: number;
         /**
          * A shorthand for writing `new Vector2(0, 0)`.
          * @returns A new vector with the values (0, 0)
@@ -2436,20 +2459,6 @@ declare namespace FudgeCore {
          */
         static DOT(_a: Vector2, _b: Vector2): number;
         /**
-         * Returns the magnitude of a given vector.
-         * If you only need to compare magnitudes of different vectors, you can compare squared magnitudes using Vector2.MAGNITUDESQR instead.
-         * @see Vector2.MAGNITUDESQR
-         * @param _vector The vector to get the magnitude of.
-         * @returns A number representing the magnitude of the given vector.
-         */
-        static MAGNITUDE(_vector: Vector2): number;
-        /**
-         * Returns the squared magnitude of a given vector. Much less calculation intensive than Vector2.MAGNITUDE, should be used instead if possible.
-         * @param _vector The vector to get the squared magnitude of.
-         * @returns A number representing the squared magnitude of the given vector.
-         */
-        static MAGNITUDESQR(_vector: Vector2): number;
-        /**
          * Calculates the cross product of two Vectors. Due to them being only 2 Dimensional, the result is a single number,
          * which implicitly is on the Z axis. It is also the signed magnitude of the result.
          * @param _a Vector to compute the cross product on
@@ -2468,6 +2477,11 @@ declare namespace FudgeCore {
          * @returns A Vector that is orthogonal to and has the same magnitude as the given Vector.
          */
         static ORTHOGONAL(_vector: Vector2, _clockwise?: boolean): Vector2;
+        /**
+         * Returns true if the coordinates of this and the given vector are to be considered identical within the given tolerance
+         * TODO: examine, if tolerance as criterium for the difference is appropriate with very large coordinate values or if _tolerance should be multiplied by coordinate value
+         */
+        equals(_compare: Vector2, _tolerance?: number): boolean;
         /**
          * Adds the given vector to the executing vector, changing the executor.
          * @param _addend The vector to add.
@@ -2494,12 +2508,6 @@ declare namespace FudgeCore {
          * @param _y new y to set
          */
         set(_x?: number, _y?: number): void;
-        /**
-         * Checks whether the given Vector is equal to the executed Vector.
-         * @param _vector The vector to comapre with.
-         * @returns true if the two vectors are equal, otherwise false
-         */
-        equals(_vector: Vector2): boolean;
         /**
          * @returns An array of the data of the vector
          */
@@ -2533,6 +2541,14 @@ declare namespace FudgeCore {
         x: number;
         y: number;
         z: number;
+        /**
+         * Returns the length of the vector
+         */
+        readonly magnitude: number;
+        /**
+         * Returns the square of the magnitude of the vector without calculating a square root. Faster for simple proximity evaluation.
+         */
+        readonly magnitudeSquared: number;
         static X(_scale?: number): Vector3;
         static Y(_scale?: number): Vector3;
         static Z(_scale?: number): Vector3;
@@ -2581,6 +2597,11 @@ declare namespace FudgeCore {
          *
          */
         static REFLECTION(_incoming: Vector3, _normal: Vector3): Vector3;
+        /**
+         * Returns true if the coordinates of this and the given vector are to be considered identical within the given tolerance
+         * TODO: examine, if tolerance as criterium for the difference is appropriate with very large coordinate values or if _tolerance should be multiplied by coordinate value
+         */
+        equals(_compare: Vector3, _tolerance?: number): boolean;
         add(_addend: Vector3): void;
         subtract(_subtrahend: Vector3): void;
         scale(_scale: number): void;
@@ -2692,7 +2713,7 @@ declare namespace FudgeCore {
      * Represents a node in the scenetree.
      * @authors Jascha Karagöl, HFU, 2019 | Jirka Dell'Oro-Friedl, HFU, 2019
      */
-    class Node extends EventTarget implements Serializable {
+    class Node extends EventTargetƒ implements Serializable {
         name: string;
         mtxWorld: Matrix4x4;
         timestampUpdate: number;
@@ -3087,7 +3108,7 @@ declare namespace FudgeCore {
      * Supports interval- and timeout-callbacks identical with standard Javascript but with respect to the scaled time
      * @authors Jirka Dell'Oro-Friedl, HFU, 2019
      */
-    class Time extends EventTarget {
+    class Time extends EventTargetƒ {
         private static gameTime;
         private start;
         private scale;
@@ -3127,6 +3148,10 @@ declare namespace FudgeCore {
          * Automatically reset at every call to set(...) and setScale(...)
          */
         getElapsedSincePreviousCall(): number;
+        /**
+         * Returns a Promise<void> to be resolved after the time given. To be used with async/await
+         */
+        delay(_lapse: number): Promise<void>;
         /**
          * Stops and deletes all [[Timer]]s attached. Should be called before this Time-object leaves scope
          */

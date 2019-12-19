@@ -36,20 +36,20 @@ namespace T03_Camera {
             return this.getChildrenByName("CameraRotX")[0];
         }
 
+        translate(_delta: number): void {
+
+            this.setDistance(this.cmpCamera.pivot.translation.z + _delta);
+        }
+
         setDistance(_distance: number): void {
 
             let newDistance: number = Math.max(this.minDistance, _distance);
             this.cmpCamera.pivot.translation = fudge.Vector3.Z(newDistance);
         }
 
-        moveDistance(_delta: number): void {
-
-            this.setDistance(this.cmpCamera.pivot.translation.z + _delta);
-        }
-
         rotateY(_delta: number): void {
 
-            this.setRotationY(this.cmpTransform.local.rotation.y + _delta);
+            this.cmpTransform.local.rotateY(_delta);
         }
 
         setRotationY(_angle: number): void {
@@ -59,12 +59,12 @@ namespace T03_Camera {
 
         rotateX(_delta: number): void {
 
-            this.setRotationX(this.rotatorX.cmpTransform.local.rotation.x + _delta);
-        }
+            let angle: number = this.rotatorX.cmpTransform.local.rotation.x + _delta;
+            this.setRotationX(angle);        }
 
         setRotationX(_angle: number): void {
 
-            this.rotatorX.cmpTransform.local.rotation = fudge.Vector3.X(_angle);
-        }
+            _angle = Math.min(Math.max(-this.maxRotX, _angle), this.maxRotX);
+            this.rotatorX.cmpTransform.local.rotation = fudge.Vector3.X(_angle);        }
     }
 }

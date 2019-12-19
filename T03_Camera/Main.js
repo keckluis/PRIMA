@@ -12,6 +12,7 @@ var T03_Camera;
         const canvas = document.querySelector("canvas");
         T03_Camera.fudge.RenderManager.initialize(true);
         T03_Camera.fudge.Debug.log("Canvas", canvas);
+        canvas.addEventListener("click", canvas.requestPointerLock);
         T03_Camera.game.appendChild(camera);
         camera.setRotationX(-20);
         camera.setRotationY(20);
@@ -43,15 +44,12 @@ var T03_Camera;
         viewport.draw();
     }
     function hndMouseMove(_event) {
-        if (_event.movementX)
-            camera.rotateY(-(_event.movementX * 0.5));
-        if (_event.movementY)
-            camera.rotateX(-(_event.movementY * 0.5));
+        camera.rotateY(-(_event.movementX * 0.3));
+        camera.rotateX(-(_event.movementY * 0.3));
         viewport.draw();
     }
     function hndWheel(_event) {
-        if (_event.deltaY)
-            camera.moveDistance(-(_event.deltaY * 0.1));
+        camera.translate(-(_event.deltaY * 0.1));
         viewport.draw();
     }
     function move(_transformation) {

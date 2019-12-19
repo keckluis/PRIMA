@@ -14,6 +14,7 @@ namespace T03_Camera {
         const canvas: HTMLCanvasElement = document.querySelector("canvas");
         fudge.RenderManager.initialize(true);
         fudge.Debug.log("Canvas", canvas);
+        canvas.addEventListener("click", canvas.requestPointerLock);
         
         game.appendChild(camera);
         camera.setRotationX(-20);
@@ -57,20 +58,14 @@ namespace T03_Camera {
 
     function hndMouseMove(_event: MouseEvent): void {
 
-        if (_event.movementX)  
-            camera.rotateY(-(_event.movementX * 0.5));
-
-        if (_event.movementY)
-            camera.rotateX(-(_event.movementY * 0.5));
-
+        camera.rotateY(-(_event.movementX * 0.3));
+        camera.rotateX(-(_event.movementY * 0.3));
         viewport.draw();
     }
 
     function hndWheel(_event: WheelEvent): void {
 
-        if (_event.deltaY)
-            camera.moveDistance(-(_event.deltaY * 0.1));
-        
+        camera.translate(-(_event.deltaY * 0.1));
         viewport.draw();
     }
 

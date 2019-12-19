@@ -24,23 +24,25 @@ var T03_Camera;
         get rotatorX() {
             return this.getChildrenByName("CameraRotX")[0];
         }
+        translate(_delta) {
+            this.setDistance(this.cmpCamera.pivot.translation.z + _delta);
+        }
         setDistance(_distance) {
             let newDistance = Math.max(this.minDistance, _distance);
             this.cmpCamera.pivot.translation = fudge.Vector3.Z(newDistance);
         }
-        moveDistance(_delta) {
-            this.setDistance(this.cmpCamera.pivot.translation.z + _delta);
-        }
         rotateY(_delta) {
-            this.setRotationY(this.cmpTransform.local.rotation.y + _delta);
+            this.cmpTransform.local.rotateY(_delta);
         }
         setRotationY(_angle) {
             this.cmpTransform.local.rotation = fudge.Vector3.Y(_angle);
         }
         rotateX(_delta) {
-            this.setRotationX(this.rotatorX.cmpTransform.local.rotation.x + _delta);
+            let angle = this.rotatorX.cmpTransform.local.rotation.x + _delta;
+            this.setRotationX(angle);
         }
         setRotationX(_angle) {
+            _angle = Math.min(Math.max(-this.maxRotX, _angle), this.maxRotX);
             this.rotatorX.cmpTransform.local.rotation = fudge.Vector3.X(_angle);
         }
     }
