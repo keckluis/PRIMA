@@ -1,0 +1,7 @@
+-Läuft automatisch (wird evtl. immer schneller)
+-Plattformen werden automatisch generiert
+-auf den Plattformen können Aliens spawnen 
+-Aliens können übersprungen oder abgeschossen werden
+-Leertaste zum Springen, Enter/Linke Maustaste zum Schießen
+-Game Over durch herunterfallen oder berühren eines Aliens
+-Highscore = gelaufene Meter
