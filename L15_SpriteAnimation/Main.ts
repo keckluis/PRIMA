@@ -1,5 +1,5 @@
 /// <reference path="../L14_ScrollerFoundation/SpriteGenerator.ts"/>
-namespace L14_ScrollerHare {
+namespace L15_SpriteAnimation {
   import ƒ = FudgeCore;
   import Sprite = L14_ScrollerFoundation.Sprite;
   import NodeSprite = L14_ScrollerFoundation.NodeSprite;
@@ -15,33 +15,33 @@ namespace L14_ScrollerHare {
     let txtImage: ƒ.TextureImage = new ƒ.TextureImage();
     txtImage.image = img;
 
-    sprite = new Sprite("Hare");
-    sprite.generateByGrid(txtImage, ƒ.Rectangle.GET(2, 104, 68, 64), 6, ƒ.Vector2.ZERO(), 64, ƒ.ORIGIN2D.BOTTOMCENTER);
+    sprite = new Sprite("Astronaut");
+    sprite.generateByGrid(txtImage, ƒ.Rectangle.GET(17, 0, 17, 17), 2, ƒ.Vector2.ZERO(), 17, ƒ.ORIGIN2D.BOTTOMCENTER);
 
     ƒ.RenderManager.initialize(true, false);
     root = new ƒ.Node("Root");
-    let mtxHare: ƒ.Matrix4x4;
-    let hare: NodeSprite;
+    let mtxAstronaut: ƒ.Matrix4x4;
+    let astronaut: NodeSprite;
 
-    hare = new NodeSprite("Hare0", sprite);
-    hare.setFrameDirection(-1);
-    root.appendChild(hare);
+    astronaut = new NodeSprite("Astronaut0", sprite);
+    astronaut.setFrameDirection(-1);
+    root.appendChild(astronaut);
 
-    hare = new NodeSprite("Hare1", sprite);
-    mtxHare = ƒ.Matrix4x4.TRANSLATION(ƒ.Vector3.X(1));
-    mtxHare.scaleX(-1);
-    hare.addComponent(new ƒ.ComponentTransform(mtxHare));
-    root.appendChild(hare);
+    astronaut = new NodeSprite("Astronaut1", sprite);
+    mtxAstronaut = ƒ.Matrix4x4.TRANSLATION(ƒ.Vector3.X(1));
+    mtxAstronaut.scaleX(-1);
+    astronaut.addComponent(new ƒ.ComponentTransform(mtxAstronaut));
+    root.appendChild(astronaut);
 
-    hare = new NodeSprite("Hare2", sprite);
-    mtxHare = ƒ.Matrix4x4.IDENTITY;
-    hare.addComponent(new ƒ.ComponentTransform(mtxHare));
-    root.appendChild(hare);
+    astronaut = new NodeSprite("Astronaut2", sprite);
+    mtxAstronaut = ƒ.Matrix4x4.IDENTITY;
+    astronaut.addComponent(new ƒ.ComponentTransform(mtxAstronaut));
+    root.appendChild(astronaut);
 
-    hare = new NodeSprite("Hare3", sprite);
-    mtxHare = ƒ.Matrix4x4.TRANSLATION(ƒ.Vector3.X(-1));
-    hare.addComponent(new ƒ.ComponentTransform(mtxHare));
-    root.appendChild(hare);
+    astronaut = new NodeSprite("Astronaut3", sprite);
+    mtxAstronaut = ƒ.Matrix4x4.TRANSLATION(ƒ.Vector3.X(-1));
+    astronaut.addComponent(new ƒ.ComponentTransform(mtxAstronaut));
+    root.appendChild(astronaut);
 
     for (let child of root.getChildren())
       child.addEventListener(
@@ -53,25 +53,25 @@ namespace L14_ScrollerHare {
     let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
     cmpCamera.pivot.translateZ(5);
     cmpCamera.pivot.lookAt(ƒ.Vector3.ZERO());
-    cmpCamera.backgroundColor = ƒ.Color.CSS("aliceblue");
+    cmpCamera.backgroundColor = ƒ.Color.CSS("darkblue");
 
     let viewport: ƒ.Viewport = new ƒ.Viewport();
     viewport.initialize("Viewport", root, cmpCamera, canvas);
     viewport.draw();
 
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
-    ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 10);
+    ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 5);
 
     function update(_event: ƒ.Eventƒ): void {
       // ƒ.Debug.log(frame);
       // root.showFrameNext();
       root.broadcastEvent(new CustomEvent("showNext"));
       root.getChildren()[3].cmpTransform.local.rotateY(5);
-      mtxHare = root.getChildren()[2].cmpTransform.local;
-      mtxHare.translateX(0.1);
-      // ƒ.Debug.log(mtxHare.translation.toString());
-      if (mtxHare.translation.x > 2)
-        mtxHare.translation = ƒ.Vector3.X(-2);
+      mtxAstronaut = root.getChildren()[2].cmpTransform.local;
+      mtxAstronaut.translateX(0.1);
+      // ƒ.Debug.log(mtxAstronaut.translation.toString());
+      if (mtxAstronaut.translation.x > 2)
+        mtxAstronaut.translation = ƒ.Vector3.X(-2);
 
 
       viewport.draw();
