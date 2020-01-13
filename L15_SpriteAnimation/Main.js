@@ -49,13 +49,10 @@ var L15_SpriteAnimation;
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 5);
         function update(_event) {
-            // ƒ.Debug.log(frame);
-            // root.showFrameNext();
             root.broadcastEvent(new CustomEvent("showNext"));
             root.getChildren()[3].cmpTransform.local.rotateY(5);
             mtxAstronaut = root.getChildren()[2].cmpTransform.local;
             mtxAstronaut.translateX(0.1);
-            // ƒ.Debug.log(mtxAstronaut.translation.toString());
             if (mtxAstronaut.translation.x > 2)
                 mtxAstronaut.translation = ƒ.Vector3.X(-2);
             viewport.draw();
