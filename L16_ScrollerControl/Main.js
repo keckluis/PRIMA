@@ -10,11 +10,11 @@ var L16_ScrollerControl;
     let keysPressed = {};
     let game;
     let astronaut;
+    let txtAstronaut;
     function test() {
         let canvas = document.querySelector("canvas");
-        let crc2 = canvas.getContext("2d");
         let img = document.querySelector("img");
-        let txtAstronaut = new L16_ScrollerControl.fudge.TextureImage();
+        txtAstronaut = new L16_ScrollerControl.fudge.TextureImage();
         txtAstronaut.image = img;
         L16_ScrollerControl.Astronaut.generateSprites(txtAstronaut);
         L16_ScrollerControl.fudge.RenderManager.initialize(true, false);
@@ -24,7 +24,7 @@ var L16_ScrollerControl;
         let cmpCamera = new L16_ScrollerControl.fudge.ComponentCamera();
         cmpCamera.pivot.translateZ(5);
         cmpCamera.pivot.lookAt(L16_ScrollerControl.fudge.Vector3.ZERO());
-        cmpCamera.backgroundColor = L16_ScrollerControl.fudge.Color.CSS("darkblue");
+        cmpCamera.backgroundColor = L16_ScrollerControl.fudge.Color.CSS("black");
         let viewport = new L16_ScrollerControl.fudge.Viewport();
         viewport.initialize("Viewport", game, cmpCamera, canvas);
         viewport.draw();
@@ -35,8 +35,6 @@ var L16_ScrollerControl;
         function update(_event) {
             processInput();
             viewport.draw();
-            crc2.strokeRect(-1, -1, canvas.width / 2, canvas.height + 2);
-            crc2.strokeRect(-1, canvas.height / 2, canvas.width + 2, canvas.height);
         }
     }
     function handleKeyboard(_event) {
@@ -53,6 +51,18 @@ var L16_ScrollerControl;
         }
         if (keysPressed[L16_ScrollerControl.fudge.KEYBOARD_CODE.W]) {
             astronaut.act(L16_ScrollerControl.ACTION.JUMP);
+            return;
+        }
+        if (keysPressed[L16_ScrollerControl.fudge.KEYBOARD_CODE.ONE]) {
+            astronaut.item = L16_ScrollerControl.ITEM.NONE;
+            return;
+        }
+        if (keysPressed[L16_ScrollerControl.fudge.KEYBOARD_CODE.TWO]) {
+            astronaut.item = L16_ScrollerControl.ITEM.GUN;
+            return;
+        }
+        if (keysPressed[L16_ScrollerControl.fudge.KEYBOARD_CODE.THREE]) {
+            astronaut.item = L16_ScrollerControl.ITEM.SHIELD;
             return;
         }
         astronaut.act(L16_ScrollerControl.ACTION.IDLE);
