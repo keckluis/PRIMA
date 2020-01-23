@@ -27,6 +27,7 @@ var L17_Gravity;
             super(_name);
             this.speed = fudge.Vector3.ZERO();
             this.item = ITEM.NONE;
+            this.isOnFloor = false;
             this.update = (_event) => {
                 this.broadcastEvent(new CustomEvent("showNext"));
                 let timeFrame = fudge.Loop.timeFrameGame / 1000;
@@ -113,7 +114,8 @@ var L17_Gravity;
                     this.cmpTransform.local.rotation = fudge.Vector3.Y(90 - 90 * direction);
                     break;
                 case ACTION.JUMP:
-                    this.speed.y = 2;
+                    this.speed.y = 3;
+                    this.isOnFloor = false;
                     break;
             }
             this.show(_action, this.item);
@@ -127,6 +129,7 @@ var L17_Gravity;
                     translation.y = rect.y;
                     this.cmpTransform.local.translation = translation;
                     this.speed.y = 0;
+                    this.isOnFloor = true;
                 }
             }
         }

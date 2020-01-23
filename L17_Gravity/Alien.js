@@ -22,25 +22,28 @@ var L17_Gravity;
             // private time: fudge.Time = new fudge.Time();
             this.speed = 0;
             this.update = (_event) => {
+                if (this.cmpTransform.local.translation.x > 0.5)
+                    this.act(ACTION_ALIEN.WALK, DIRECTION_ALIEN.LEFT);
+                else if (this.cmpTransform.local.translation.x < -0.5)
+                    this.act(ACTION_ALIEN.WALK, DIRECTION_ALIEN.RIGHT);
                 let timeFrame = fudge.Loop.timeFrameGame / 1000;
                 this.cmpTransform.local.translateX(this.speed * timeFrame);
                 this.broadcastEvent(new CustomEvent("showNext"));
             };
             this.addComponent(new fudge.ComponentTransform());
-            this.cmpTransform.local.translateX(5);
             for (let sprite of Alien.sprites) {
                 let nodeSprite = new L17_Gravity.NodeSprite(sprite.name, sprite);
                 nodeSprite.activate(false);
                 nodeSprite.addEventListener("showNext", (_event) => { _event.currentTarget.showFrameNext(); }, true);
                 this.appendChild(nodeSprite);
             }
-            this.show(ACTION_ALIEN.IDLE);
+            this.act(ACTION_ALIEN.WALK, DIRECTION_ALIEN.RIGHT);
             fudge.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         }
         static generateSprites(_txtImage) {
             Alien.sprites = [];
             let sprite = new L17_Gravity.Sprite(ACTION_ALIEN.WALK);
-            sprite.generateByGrid(_txtImage, fudge.Rectangle.GET(0, 0, 8, 10), 2, fudge.Vector2.ZERO(), 30, fudge.ORIGIN2D.BOTTOMCENTER);
+            sprite.generateByGrid(_txtImage, fudge.Rectangle.GET(0, 73, 8, 10), 2, fudge.Vector2.ZERO(), 30, fudge.ORIGIN2D.BOTTOMCENTER);
             Alien.sprites.push(sprite);
             sprite = new L17_Gravity.Sprite(ACTION_ALIEN.IDLE);
             sprite.generateByGrid(_txtImage, fudge.Rectangle.GET(16, 0, 8, 10), 3, fudge.Vector2.ZERO(), 30, fudge.ORIGIN2D.BOTTOMCENTER);
@@ -70,7 +73,7 @@ var L17_Gravity;
             this.show(_action);
         }
     }
-    Alien.speedMax = 1.5; // units per second
+    Alien.speedMax = 0.3; // units per second
     L17_Gravity.Alien = Alien;
 })(L17_Gravity || (L17_Gravity = {}));
 //# sourceMappingURL=Alien.js.map

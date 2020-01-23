@@ -14,7 +14,9 @@ namespace L17_Gravity {
     export let game: fudge.Node;
     export let level: fudge.Node;
     let astronaut: Astronaut;
+    let alien: Alien;
     let txtAstronaut: fudge.TextureImage;  
+    let cmpCamera: fudge.ComponentCamera;
   
     function test(): void {
       let canvas: HTMLCanvasElement = document.querySelector("canvas");
@@ -22,15 +24,18 @@ namespace L17_Gravity {
       txtAstronaut = new fudge.TextureImage();
       txtAstronaut.image = img;
       Astronaut.generateSprites(txtAstronaut);
+      Alien.generateSprites(txtAstronaut);
   
       fudge.RenderManager.initialize(true, false);
       game = new fudge.Node("Game");
       astronaut = new Astronaut("Astronaut");
+      alien = new Alien("Alien");
       level = createLevel();
       game.appendChild(level);
       game.appendChild(astronaut);
+      game.appendChild(alien);
   
-      let cmpCamera: fudge.ComponentCamera = new fudge.ComponentCamera();
+      cmpCamera = new fudge.ComponentCamera();
       cmpCamera.pivot.translateZ(5);
       cmpCamera.pivot.lookAt(fudge.Vector3.ZERO());
       cmpCamera.backgroundColor = fudge.Color.CSS("black");
@@ -47,7 +52,8 @@ namespace L17_Gravity {
   
       function update(_event: fudge.Eventƒ): void {
         processInput();
-  
+        
+        cmpCamera.pivot.translation = new fudge.Vector3(astronaut.cmpTransform.local.translation.x, cmpCamera.pivot.translation.y, cmpCamera.pivot.translation.z);
         viewport.draw();
       }
     }
@@ -67,7 +73,7 @@ namespace L17_Gravity {
         return;
       }
       
-      if (keysPressed[fudge.KEYBOARD_CODE.W]) {
+      if (keysPressed[fudge.KEYBOARD_CODE.W] && astronaut.isOnFloor) {
         astronaut.act(ACTION.JUMP);
         return;
       }
@@ -103,7 +109,7 @@ namespace L17_Gravity {
       floor.cmpTransform.local.scaleY(0.2);
       floor.cmpTransform.local.scaleX(2);
       floor.cmpTransform.local.translateY(0.2);
-      floor.cmpTransform.local.translateX(1.5);
+      floor.cmpTransform.local.translateX(3);
       level.appendChild(floor);
   
       return level;

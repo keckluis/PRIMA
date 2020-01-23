@@ -13,7 +13,7 @@ namespace L17_Gravity {
   
     export class Alien extends fudge.Node {
       private static sprites: Sprite[];
-      private static speedMax: number = 1.5; // units per second
+      private static speedMax: number = 0.3; // units per second
       // private action: ACTION_ALIEN;
       // private time: fudge.Time = new fudge.Time();
       public speed: number = 0;
@@ -21,7 +21,6 @@ namespace L17_Gravity {
       constructor(_name: string = "Alien") {
         super(_name);
         this.addComponent(new fudge.ComponentTransform());
-        this.cmpTransform.local.translateX(5);
   
         for (let sprite of Alien.sprites) {
           let nodeSprite: NodeSprite = new NodeSprite(sprite.name, sprite);
@@ -35,15 +34,15 @@ namespace L17_Gravity {
   
           this.appendChild(nodeSprite);
         }
-  
-        this.show(ACTION_ALIEN.IDLE);
+        
+        this.act(ACTION_ALIEN.WALK, DIRECTION_ALIEN.RIGHT);
         fudge.Loop.addEventListener(fudge.EVENT.LOOP_FRAME, this.update);
       }
   
       public static generateSprites(_txtImage: fudge.TextureImage): void {
         Alien.sprites = [];
         let sprite: Sprite = new Sprite(ACTION_ALIEN.WALK);
-        sprite.generateByGrid(_txtImage, fudge.Rectangle.GET(0, 0, 8, 10), 2, fudge.Vector2.ZERO(), 30, fudge.ORIGIN2D.BOTTOMCENTER);
+        sprite.generateByGrid(_txtImage, fudge.Rectangle.GET(0, 73, 8, 10), 2, fudge.Vector2.ZERO(), 30, fudge.ORIGIN2D.BOTTOMCENTER);
         Alien.sprites.push(sprite);
   
         sprite = new Sprite(ACTION_ALIEN.IDLE);
@@ -79,6 +78,12 @@ namespace L17_Gravity {
       }
   
       private update = (_event: fudge.Eventƒ): void => {
+
+        if (this.cmpTransform.local.translation.x > 0.5)
+          this.act(ACTION_ALIEN.WALK, DIRECTION_ALIEN.LEFT);
+        else if (this.cmpTransform.local.translation.x < -0.5)
+          this.act(ACTION_ALIEN.WALK, DIRECTION_ALIEN.RIGHT);
+
         let timeFrame: number = fudge.Loop.timeFrameGame / 1000;
         this.cmpTransform.local.translateX(this.speed * timeFrame);
         this.broadcastEvent(new CustomEvent("showNext"));

@@ -9,20 +9,25 @@ var L17_Gravity;
     window.addEventListener("load", test);
     let keysPressed = {};
     let astronaut;
+    let alien;
     let txtAstronaut;
+    let cmpCamera;
     function test() {
         let canvas = document.querySelector("canvas");
         let img = document.querySelector("img");
         txtAstronaut = new L17_Gravity.fudge.TextureImage();
         txtAstronaut.image = img;
         L17_Gravity.Astronaut.generateSprites(txtAstronaut);
+        L17_Gravity.Alien.generateSprites(txtAstronaut);
         L17_Gravity.fudge.RenderManager.initialize(true, false);
         L17_Gravity.game = new L17_Gravity.fudge.Node("Game");
         astronaut = new L17_Gravity.Astronaut("Astronaut");
+        alien = new L17_Gravity.Alien("Alien");
         L17_Gravity.level = createLevel();
         L17_Gravity.game.appendChild(L17_Gravity.level);
         L17_Gravity.game.appendChild(astronaut);
-        let cmpCamera = new L17_Gravity.fudge.ComponentCamera();
+        L17_Gravity.game.appendChild(alien);
+        cmpCamera = new L17_Gravity.fudge.ComponentCamera();
         cmpCamera.pivot.translateZ(5);
         cmpCamera.pivot.lookAt(L17_Gravity.fudge.Vector3.ZERO());
         cmpCamera.backgroundColor = L17_Gravity.fudge.Color.CSS("black");
@@ -35,6 +40,7 @@ var L17_Gravity;
         L17_Gravity.fudge.Loop.start(L17_Gravity.fudge.LOOP_MODE.TIME_GAME, 10);
         function update(_event) {
             processInput();
+            cmpCamera.pivot.translation = new L17_Gravity.fudge.Vector3(astronaut.cmpTransform.local.translation.x, cmpCamera.pivot.translation.y, cmpCamera.pivot.translation.z);
             viewport.draw();
         }
     }
@@ -50,7 +56,7 @@ var L17_Gravity;
             astronaut.act(L17_Gravity.ACTION.WALK, L17_Gravity.DIRECTION.RIGHT);
             return;
         }
-        if (keysPressed[L17_Gravity.fudge.KEYBOARD_CODE.W]) {
+        if (keysPressed[L17_Gravity.fudge.KEYBOARD_CODE.W] && astronaut.isOnFloor) {
             astronaut.act(L17_Gravity.ACTION.JUMP);
             return;
         }
@@ -82,7 +88,7 @@ var L17_Gravity;
         floor.cmpTransform.local.scaleY(0.2);
         floor.cmpTransform.local.scaleX(2);
         floor.cmpTransform.local.translateY(0.2);
-        floor.cmpTransform.local.translateX(1.5);
+        floor.cmpTransform.local.translateX(3);
         level.appendChild(floor);
         return level;
     }

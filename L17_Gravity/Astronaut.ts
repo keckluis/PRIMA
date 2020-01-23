@@ -23,6 +23,7 @@ namespace L17_Gravity {
       private static gravity: fudge.Vector2 = fudge.Vector2.Y(-3);
       public speed: fudge.Vector3 = fudge.Vector3.ZERO();
       public item: ITEM = ITEM.NONE;
+      public isOnFloor: boolean = false;
   
       constructor(_name: string = "Astronaut") {
         super(_name);
@@ -127,7 +128,8 @@ namespace L17_Gravity {
             this.cmpTransform.local.rotation = fudge.Vector3.Y(90 - 90 * direction);
             break;
           case ACTION.JUMP:
-              this.speed.y = 2;
+              this.speed.y = 3;
+              this.isOnFloor = false;
               break;
         }
         this.show(_action, this.item);
@@ -156,6 +158,7 @@ namespace L17_Gravity {
             translation.y = rect.y;
             this.cmpTransform.local.translation = translation;
             this.speed.y = 0;
+            this.isOnFloor = true;
           }
         }
       }
